@@ -1,0 +1,29 @@
+package com.example.JPA;
+
+import com.example.JPA.model.Ticket;
+import com.example.JPA.repository.TicketRepository;
+import com.example.JPA.service.TicketService;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import java.time.LocalDateTime;
+
+@SpringBootTest
+public class CreateTicket {
+
+    @Autowired
+    TicketRepository ticketRepository;
+
+    @Autowired
+    TicketService ticketService;
+
+    @Test
+    public void testTicketCreate(){
+        LocalDateTime localDateStart = LocalDateTime.of(2017, 1, 14, 10, 34);
+        LocalDateTime localDateEnd = LocalDateTime.of(2018, 1, 14, 10, 34);
+        ticketService.createTicket(new Ticket(1L,"Miskolci koncert","Miskolc",localDateStart,localDateEnd));
+
+        System.out.println(ticketRepository.findById(1L).get());
+    }
+}
