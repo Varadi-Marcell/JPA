@@ -1,36 +1,55 @@
 package com.example.JPA.service;
 
+import com.example.JPA.dto.TicketPurchaseRequest;
+import com.example.JPA.exceptions.NotEnoughFundsException;
+import com.example.JPA.exceptions.ResourceNotFoundException;
+import com.example.JPA.model.FestivalCardPass;
+import com.example.JPA.model.Ticket;
+import com.example.JPA.repository.FestivalCardPassRepository;
+import com.example.JPA.repository.TicketRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 public class TicketPurchaseService {
 
-//    private final UserRepository userRepository;
-//    private final TicketRepository ticketRepository;
-//    private final TicketValidator ticketValidator = new TicketValidator();
-////    private final Logger logger = LoggerFactory.getLogger(TicketPurchaseService.class);
-//
-//    public TicketPurchaseService(UserRepository userRepository, TicketRepository ticketRepository) {
-//        this.userRepository = userRepository;
-//        this.ticketRepository = ticketRepository;
-//    }
+    private final TicketRepository ticketRepository;
+    private final FestivalCardPassRepository festivalCardPassRepository;
+    private final Logger logger = LoggerFactory.getLogger(TicketPurchaseService.class);
 
-//    @Transactional
-//    public User ticketPurchase(TicketPurchaseRequest request){
-//        User user = userRepository.save(request.getUser());
-//
-//        Ticket ticket = request.getTicket();
-//        ticketValidator.validateTicket(request.getTicket().getName());
-//
-//        if(ticketRepository.existsTicketByName(ticket.getName())){
-//            throw new RuntimeException("Ticket already exists!");
-//        }
-//
-//        ticket = ticketRepository.save(ticket);
-//
-//        user.setTicket(ticket);
-//
-//        return userRepository.save(user);
-//    }
+    public TicketPurchaseService(TicketRepository ticketRepository, FestivalCardPassRepository festivalCardPassRepository) {
+        this.ticketRepository = ticketRepository;
+        this.festivalCardPassRepository = festivalCardPassRepository;
+    }
 
+    @Transactional
+    public void purchaseTicket(TicketPurchaseRequest request) {
+
+        Optional<Ticket> ticket = ticketRepository.findById(request.ticketId());
+        Optional<FestivalCardPass> festivalCardPass = festivalCardPassRepository.findById(request.festivalCardPassId());
+
+        if (!ticket.isPresent()) {
+            throw new ResourceNotFoundException(String.format("Ticket with:%d id not exists", ticket.get().getId()));
+        }
+
+        if (!festivalCardPass.isPresent()) {
+            throw new ResourceNotFoundException(String.format("FestivalCard with:%d id not exists", festivalCardPass.get().getId()));
+        }
+
+        validateCardFundsForTicketPurchase(festivalCardPass.get().getAmount(), ticket.get().getPrice());
+
+        festivalCardPass.get().addTicket(ticket.get());
+
+        festivalCardPassRepository.save(festivalCardPass.get());
+    }
+
+    public void validateCardFundsForTicketPurchase(Integer avaiableFunds, Integer ticketPrice) {
+        if (avaiableFunds < ticketPrice) {
+            throw new NotEnoughFundsException("There is not enough money on the card. " + "Current amount:" + avaiableFunds);
+        }
+    }
 }

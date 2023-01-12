@@ -17,6 +17,8 @@ public class Ticket implements Serializable {
 
     private String location;
 
+    private Integer price;
+
     private LocalDateTime startDate;
 
     private LocalDateTime endDate;
@@ -30,13 +32,15 @@ public class Ticket implements Serializable {
                     name = "festivalCardPass_id_fk"
             )
     )
+
     private FestivalCardPass festivalCardPass;
 
-    public Ticket(Long id, String name, String location, LocalDateTime startDate, LocalDateTime endDate) {
+    public Ticket(Long id, String name, String location, LocalDateTime startDate, Integer price, LocalDateTime endDate) {
         this.id = id;
         this.name = name;
         this.location = location;
         this.startDate = startDate;
+        this.price = price;
         this.endDate = endDate;
     }
 
@@ -87,6 +91,18 @@ public class Ticket implements Serializable {
 
     public void setEndDate(LocalDateTime endDate) {
         this.endDate = endDate;
+    }
+
+    public void setFestivalCardPass(FestivalCardPass festivalCardPass) {
+        this.festivalCardPass = festivalCardPass;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.example.JPA.controller;
 
+import com.example.JPA.exceptions.NotEnoughFundsException;
 import com.example.JPA.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,5 +16,10 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     @ExceptionHandler(value = {ResourceNotFoundException.class})
     protected ResponseEntity<Object> handleNoSuchElement(ResourceNotFoundException ex, WebRequest request){
         return handleExceptionInternal(ex,ex.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND,request);
+    }
+
+    @ExceptionHandler(value = {NotEnoughFundsException.class})
+    protected ResponseEntity<Object> handleNotEnoughFunds(NotEnoughFundsException ex,WebRequest request){
+        return handleExceptionInternal(ex,ex.getMessage(),new HttpHeaders(),HttpStatus.PAYMENT_REQUIRED,request);
     }
 }

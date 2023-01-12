@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Entity(name = "FestivalCardPass")
 
@@ -14,7 +13,7 @@ public class FestivalCardPass {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID id;
+    private Long id;
 
     private String cardHolderName;
 
@@ -33,10 +32,9 @@ public class FestivalCardPass {
 
     @OneToMany(
             mappedBy = "festivalCardPass",
-            orphanRemoval = true,
             cascade = {CascadeType.PERSIST, CascadeType.REMOVE}
     )
-    private List<Ticket> ticket = new ArrayList<>();
+    private List<Ticket> ticketList = new ArrayList<>();
 
 
     public FestivalCardPass(String cardHolderName, Integer amount, User user) {
@@ -57,11 +55,11 @@ public class FestivalCardPass {
         this.user = user;
     }
 
-    public UUID getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(UUID id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -81,12 +79,13 @@ public class FestivalCardPass {
         this.amount = amount;
     }
 
-    public List<Ticket> getTicket() {
-        return ticket;
+    public List<Ticket> getTicketList() {
+        return ticketList;
     }
 
-    public void setTicket(List<Ticket> ticket) {
-        this.ticket = ticket;
+    public void addTicket(Ticket ticket) {
+        this.ticketList.add(ticket);
+        ticket.setFestivalCardPass(this);
     }
 
     @Override
@@ -95,14 +94,17 @@ public class FestivalCardPass {
                 "id=" + id +
                 ", cardHolderName='" + cardHolderName + '\'' +
                 ", amount=" + amount +
+                ", user=" + user +
+                ", ticketList=" + ticketList +
                 '}';
     }
 
     public FestivalCardpassDto convertToDTO(FestivalCardPass festivalCardPass){
         return new FestivalCardpassDto(
+                festivalCardPass.getId(),
                 festivalCardPass.getCardHolderName(),
                 festivalCardPass.getAmount(),
-                festivalCardPass.getTicket()
+                festivalCardPass.getTicketList()
         );
     }
 

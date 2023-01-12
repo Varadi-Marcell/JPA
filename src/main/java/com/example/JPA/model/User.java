@@ -30,12 +30,12 @@ public class User implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "username",
+    @Column(name = "name",
             nullable = false,
             columnDefinition = "TEXT")
     private String name;
 
-    @Column(name = "userage")
+    @Column(name = "age")
     private int age;
 
 //    @JsonIgnore

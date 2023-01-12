@@ -6,7 +6,9 @@ import com.example.JPA.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,17 +24,18 @@ public class UserController {
     }
 
     @GetMapping()
-    public List<UserDto> getAllUser(){
-        return userService.getAllUser()
-                .stream()
-                .map(s -> s.convertToDto(s))
-                .collect(Collectors.toList());
+    public ResponseEntity<List<UserDto>> getAllUser(){
+        return new ResponseEntity<>(userService.getAllUser(),HttpStatus.OK);
     }
 
     @PostMapping(consumes = "application/json")
-    public void createUser(@RequestBody User user){
-         userService.createUser(user);
+    public ResponseEntity<Void> createUser(@RequestBody User user){
+        userService.createUser(user);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(user.getId()).toUri();
+        return ResponseEntity.created(location).build();
     }
+
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<User> getUserById(@PathVariable("id") Long id){

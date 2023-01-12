@@ -7,12 +7,14 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class FestivalCardpassDto {
 
+    private Long id;
     private String cardHolderName;
     private Integer amount;
     private List<Ticket> ticketList = new ArrayList<>();

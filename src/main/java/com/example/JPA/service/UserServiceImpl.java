@@ -1,5 +1,6 @@
 package com.example.JPA.service;
 
+import com.example.JPA.dto.UserDto;
 import com.example.JPA.exceptions.ResourceNotFoundException;
 import com.example.JPA.model.User;
 import com.example.JPA.repository.UserRepository;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -18,8 +20,10 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    public List<User> getAllUser() {
-        return userRepository.findAll();
+    public List<UserDto> getAllUser() {
+        return userRepository.findAll().stream()
+                .map(s -> s.convertToDto(s))
+                .collect(Collectors.toList());
     }
 
 //    public List<FestivalCardPass> getAllUserWithPass() {
