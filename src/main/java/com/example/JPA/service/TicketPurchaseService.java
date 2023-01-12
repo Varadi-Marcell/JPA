@@ -41,6 +41,7 @@ public class TicketPurchaseService {
         }
 
         validateCardFundsForTicketPurchase(festivalCardPass.get().getAmount(), ticket.get().getPrice());
+        festivalCardPass.get().setAmount(deductFundsFromCard(festivalCardPass.get().getAmount(), ticket.get().getPrice()));
 
         festivalCardPass.get().addTicket(ticket.get());
 
@@ -48,8 +49,13 @@ public class TicketPurchaseService {
     }
 
     public void validateCardFundsForTicketPurchase(Integer avaiableFunds, Integer ticketPrice) {
-        if (avaiableFunds < ticketPrice) {
+        if (!(avaiableFunds > ticketPrice+ticketPrice*0.27)) {
             throw new NotEnoughFundsException("There is not enough money on the card. " + "Current amount:" + avaiableFunds);
         }
+    }
+
+    public Integer deductFundsFromCard(Integer avaiableFunds, Integer ticketPrice){
+        double deductedFunds = avaiableFunds-(ticketPrice+ticketPrice*0.27);
+        return (int) deductedFunds;
     }
 }
