@@ -1,5 +1,6 @@
 package com.example.JPA.controller;
 
+import com.example.JPA.dto.TicketDto;
 import com.example.JPA.model.Ticket;
 import com.example.JPA.service.TicketService;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,7 @@ public class TicketController {
     }
 
     @GetMapping
-    public List<Ticket> getAllTicket(){
+    public List<TicketDto> getAllTicket(){
         return ticketService.getAllTickets();
     }
 

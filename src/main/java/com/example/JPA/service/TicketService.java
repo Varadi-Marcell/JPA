@@ -1,5 +1,6 @@
 package com.example.JPA.service;
 
+import com.example.JPA.dto.TicketDto;
 import com.example.JPA.exceptions.ResourceNotFoundException;
 import com.example.JPA.model.Ticket;
 
@@ -9,17 +10,20 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TicketService {
-    private TicketRepository ticketRepository;
+    private final TicketRepository ticketRepository;
 
     public TicketService(TicketRepository ticketRepository) {
         this.ticketRepository = ticketRepository;
     }
 
-    public List<Ticket> getAllTickets() {
-        return ticketRepository.findAll();
+    public List<TicketDto> getAllTickets() {
+        return ticketRepository.findAll().stream()
+                .map(s -> s.ticketToTicketDto(s))
+                .collect(Collectors.toList());
     }
 
     public void createTicket(Ticket ticket) {
@@ -44,6 +48,7 @@ public class TicketService {
         if (!ticketRepository.existsTicketById(id)) {
             throw new ResourceNotFoundException("Ticket with id:" + id + " not found!");
         }
+
         ticketRepository.deleteById(id);
     }
 }

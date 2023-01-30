@@ -98,6 +98,7 @@ public class User implements Serializable {
 
     public UserDto convertToDto(User user) {
         return new UserDto(
+                user.getId(),
                 user.getName(),
                 user.age,
                 user.getFestivalCardPass()

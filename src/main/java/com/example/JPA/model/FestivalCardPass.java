@@ -6,9 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-
 @Entity(name = "FestivalCardPass")
-
 public class FestivalCardPass {
 
     @Id
@@ -18,8 +16,9 @@ public class FestivalCardPass {
     private String cardHolderName;
 
     private Integer amount;
+
     @JsonIgnore
-    @OneToOne(cascade = CascadeType.ALL,
+    @OneToOne(
             fetch = FetchType.LAZY)
     @JoinColumn(
             name = "user_id",
@@ -30,9 +29,10 @@ public class FestivalCardPass {
     )
     private User user;
 
-    @OneToMany(
+    @ManyToMany(
             mappedBy = "festivalCardPass",
-            cascade = {CascadeType.PERSIST, CascadeType.REMOVE}
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.PERSIST,CascadeType.MERGE}
     )
     private List<Ticket> ticketList = new ArrayList<>();
 
@@ -88,6 +88,11 @@ public class FestivalCardPass {
         ticket.setFestivalCardPass(this);
     }
 
+    public FestivalCardPass removeTicket(Ticket ticket){
+        ticketList.remove(ticket);
+        ticket.setFestivalCardPass(null);
+        return this;
+    }
     @Override
     public String toString() {
         return "FestivalCardPass{" +
@@ -98,6 +103,7 @@ public class FestivalCardPass {
                 ", ticketList=" + ticketList +
                 '}';
     }
+
 
     public FestivalCardpassDto convertToDTO(FestivalCardPass festivalCardPass){
         return new FestivalCardpassDto(

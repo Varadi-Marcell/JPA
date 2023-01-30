@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDateTime;
 
 @SpringBootTest
-public class CreateTicket {
+public class TicketTest {
 
     @Autowired
     TicketRepository ticketRepository;
@@ -22,7 +22,7 @@ public class CreateTicket {
     public void testTicketCreate(){
         LocalDateTime localDateStart = LocalDateTime.of(2017, 1, 14, 10, 34);
         LocalDateTime localDateEnd = LocalDateTime.of(2018, 1, 14, 10, 34);
-        ticketService.createTicket(new Ticket(1L,"Miskolci koncert","Miskolc",localDateStart,localDateEnd));
+        ticketService.createTicket(new Ticket(1L,"Miskolci koncert","Miskolc",localDateStart,30,localDateEnd));
 
         System.out.println(ticketRepository.findById(1L).get());
     }

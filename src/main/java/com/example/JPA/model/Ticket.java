@@ -1,8 +1,14 @@
 package com.example.JPA.model;
 
+import com.example.JPA.dto.TicketDto;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.util.BeanUtil;
+import org.springframework.beans.BeanUtils;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "tickets")
@@ -23,7 +29,8 @@ public class Ticket implements Serializable {
 
     private LocalDateTime endDate;
 
-    @ManyToOne(cascade = CascadeType.ALL,
+    @JsonIgnore
+    @ManyToMany(
             fetch = FetchType.LAZY)
     @JoinColumn(
             name = "festivalCardPass_id",
@@ -32,8 +39,7 @@ public class Ticket implements Serializable {
                     name = "festivalCardPass_id_fk"
             )
     )
-
-    private FestivalCardPass festivalCardPass;
+    private List<FestivalCardPass> festivalCardPass;
 
     public Ticket(Long id, String name, String location, LocalDateTime startDate, Integer price, LocalDateTime endDate) {
         this.id = id;
@@ -94,7 +100,7 @@ public class Ticket implements Serializable {
     }
 
     public void setFestivalCardPass(FestivalCardPass festivalCardPass) {
-        this.festivalCardPass = festivalCardPass;
+        this.festivalCardPass.add(festivalCardPass);
     }
 
     public Integer getPrice() {
@@ -105,14 +111,30 @@ public class Ticket implements Serializable {
         this.price = price;
     }
 
+    public List<FestivalCardPass> getFestivalCardPass() {
+        return festivalCardPass;
+    }
+
     @Override
     public String toString() {
         return "Ticket{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", location='" + location + '\'' +
+                ", price=" + price +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
+                ", festivalCardPass=" + festivalCardPass +
                 '}';
+    }
+    public TicketDto ticketToTicketDto(Ticket ticket){
+
+        return new TicketDto(ticket.getId(),
+                ticket.getName(),
+                ticket.getLocation(),
+                ticket.getPrice(),
+                ticket.getStartDate(),
+                ticket.getEndDate()
+                );
     }
 }

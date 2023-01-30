@@ -6,12 +6,15 @@ import com.example.JPA.dto.FestivalCardPassAddDto;
 import com.example.JPA.exceptions.ResourceNotFoundException;
 import com.example.JPA.model.FestivalCardPass;
 import com.example.JPA.model.User;
+import com.example.JPA.repository.TicketRepository;
 import com.example.JPA.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PreRemove;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -19,13 +22,20 @@ import java.util.stream.Collectors;
 @Service
 public class FestivalCardPassService {
 
+    private final EntityManager em;
     private final FestivalCardPassRepository festivalCardPassRepository;
     private final UserRepository userRepository;
+    private final TicketRepository ticketRepository;
     private final Logger logger = LoggerFactory.getLogger(FestivalCardPassService.class);
 
-    public FestivalCardPassService(FestivalCardPassRepository festivalCardPassRepository, UserRepository userRepository) {
+    public FestivalCardPassService(FestivalCardPassRepository festivalCardPassRepository,
+                                   UserRepository userRepository,
+                                   TicketRepository ticketRepository,
+                                   EntityManager em) {
         this.festivalCardPassRepository = festivalCardPassRepository;
         this.userRepository = userRepository;
+        this.ticketRepository = ticketRepository;
+        this.em = em;
     }
 
     public List<FestivalCardpassDto> getAllFestivalCardPass() {
@@ -47,8 +57,6 @@ public class FestivalCardPassService {
 
         Optional<User> user = userRepository.findById(request.getId());
 
-        logger.info(request.getFestivalCardPass().getCardHolderName());
-
         FestivalCardPass festivalCardPass = new FestivalCardPass(
                 request.getFestivalCardPass().getCardHolderName(),
                 request.getFestivalCardPass().getAmount(),
@@ -60,9 +68,20 @@ public class FestivalCardPassService {
         userRepository.save(user.get());
     }
 
-
     @Transactional
-    public void addTicket(){
+    public void deleteFestivalCard(Long id){
 
+        FestivalCardPass festivalCardPass = em.find(FestivalCardPass.class,id);
+        festivalCardPass.getTicketList().forEach(s -> s.setFestivalCardPass(null));
+        ticketRepository.findAll().stream().forEach(s -> logger.info(s.toString()));
+//        em.flush();
+//        em.remove(festivalCardPass);
+
+//        Optional<FestivalCardPass> festivalCardPass=festivalCardPassRepository.findById(id);
+//        if (!festivalCardPass.isPresent()){
+//            throw new ResourceNotFoundException("Festival card with this id:"+id+" does not exists");
+//        }
+//
+//        festivalCardPassRepository.deleteById(id);
     }
 }

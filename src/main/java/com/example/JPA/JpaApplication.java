@@ -24,8 +24,7 @@ public class JpaApplication {
 		return args -> {
 			User user = new User("marci",22);
 
-
-			FestivalCardPass festivalCardPass = new FestivalCardPass("marici",567,user);
+			FestivalCardPass festivalCardPass = new FestivalCardPass("marci",567,user);
 
 			user.setFestivalCardPass(festivalCardPass);
 
