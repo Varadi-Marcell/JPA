@@ -2,11 +2,14 @@ package com.example.JPA.model;
 
 import com.example.JPA.dto.FestivalCardpassDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+
 @Entity(name = "FestivalCardPass")
+@Data
 public class FestivalCardPass {
 
     @Id
@@ -29,11 +32,17 @@ public class FestivalCardPass {
     )
     private User user;
 
-    @ManyToMany(
-            mappedBy = "festivalCardPass",
-            fetch = FetchType.LAZY,
-            cascade = {CascadeType.PERSIST,CascadeType.MERGE}
-    )
+    //    @ManyToMany(
+//            mappedBy = "festivalCardPass",
+//            fetch = FetchType.LAZY,
+//            cascade = {CascadeType.PERSIST,CascadeType.MERGE}
+//    )
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @JoinTable(
+            name = "ticketList",
+            joinColumns = @JoinColumn(name = "festivalCardPass_id"),
+            inverseJoinColumns = @JoinColumn(name = "ticket_id"))
     private List<Ticket> ticketList = new ArrayList<>();
 
 
@@ -88,11 +97,12 @@ public class FestivalCardPass {
         ticket.setFestivalCardPass(this);
     }
 
-    public FestivalCardPass removeTicket(Ticket ticket){
-        ticketList.remove(ticket);
+    public void removeTicket(Ticket ticket) {
+        this.ticketList.remove(ticket);
+        ticket.getFestivalCardPass().remove(this);
         ticket.setFestivalCardPass(null);
-        return this;
     }
+
     @Override
     public String toString() {
         return "FestivalCardPass{" +
@@ -105,7 +115,7 @@ public class FestivalCardPass {
     }
 
 
-    public FestivalCardpassDto convertToDTO(FestivalCardPass festivalCardPass){
+    public FestivalCardpassDto convertToDTO(FestivalCardPass festivalCardPass) {
         return new FestivalCardpassDto(
                 festivalCardPass.getId(),
                 festivalCardPass.getCardHolderName(),

@@ -49,6 +49,8 @@ public class TicketService {
             throw new ResourceNotFoundException("Ticket with id:" + id + " not found!");
         }
 
+        Optional<Ticket> ticket = ticketRepository.findById(id);
+//        ticket.get().get
         ticketRepository.deleteById(id);
     }
 }

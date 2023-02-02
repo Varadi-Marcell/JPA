@@ -3,13 +3,14 @@ package com.example.JPA.model;
 import com.example.JPA.dto.TicketDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.util.BeanUtil;
+import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
-
+@Data
 @Entity
 @Table(name = "tickets")
 public class Ticket implements Serializable {
@@ -29,16 +30,18 @@ public class Ticket implements Serializable {
 
     private LocalDateTime endDate;
 
+    //    @JsonIgnore
+//    @ManyToMany(
+//            fetch = FetchType.LAZY)
+//    @JoinColumn(
+//            name = "festivalCardPass_id",
+//            referencedColumnName = "id",
+//            foreignKey = @ForeignKey(
+//                    name = "festivalCardPass_id_fk"
+//            )
+//    )
     @JsonIgnore
-    @ManyToMany(
-            fetch = FetchType.LAZY)
-    @JoinColumn(
-            name = "festivalCardPass_id",
-            referencedColumnName = "id",
-            foreignKey = @ForeignKey(
-                    name = "festivalCardPass_id_fk"
-            )
-    )
+    @ManyToMany(mappedBy = "ticketList")
     private List<FestivalCardPass> festivalCardPass;
 
     public Ticket(Long id, String name, String location, LocalDateTime startDate, Integer price, LocalDateTime endDate) {
@@ -127,7 +130,8 @@ public class Ticket implements Serializable {
                 ", festivalCardPass=" + festivalCardPass +
                 '}';
     }
-    public TicketDto ticketToTicketDto(Ticket ticket){
+
+    public TicketDto ticketToTicketDto(Ticket ticket) {
 
         return new TicketDto(ticket.getId(),
                 ticket.getName(),
@@ -135,6 +139,6 @@ public class Ticket implements Serializable {
                 ticket.getPrice(),
                 ticket.getStartDate(),
                 ticket.getEndDate()
-                );
+        );
     }
 }

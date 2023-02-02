@@ -5,6 +5,7 @@ import com.example.JPA.exceptions.NotEnoughFundsException;
 import com.example.JPA.exceptions.ResourceNotFoundException;
 import com.example.JPA.model.FestivalCardPass;
 import com.example.JPA.model.Ticket;
+import com.example.JPA.model.User;
 import com.example.JPA.repository.FestivalCardPassRepository;
 import com.example.JPA.repository.TicketRepository;
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -49,13 +51,31 @@ public class TicketPurchaseService {
     }
 
     public void validateCardFundsForTicketPurchase(Integer avaiableFunds, Integer ticketPrice) {
-        if (!(avaiableFunds > ticketPrice+ticketPrice*0.27)) {
+        if (!(avaiableFunds > ticketPrice + ticketPrice * 0.27)) {
             throw new NotEnoughFundsException("There is not enough money on the card. " + "Current amount:" + avaiableFunds);
         }
     }
 
-    public Integer deductFundsFromCard(Integer avaiableFunds, Integer ticketPrice){
-        double deductedFunds = avaiableFunds-(ticketPrice+ticketPrice*0.27);
+    public Integer deductFundsFromCard(Integer avaiableFunds, Integer ticketPrice) {
+        double deductedFunds = avaiableFunds - (ticketPrice + ticketPrice * 0.27);
         return (int) deductedFunds;
+    }
+
+//    @Transactional
+    public void deleteTicketById(Long id) {
+
+        if (!ticketRepository.existsTicketById(id)) {
+            throw new ResourceNotFoundException("Ticket with id:" + id + " not found!");
+        }
+
+        Optional<Ticket> ticket = ticketRepository.findById(id);
+
+        List<FestivalCardPass> festivalCardPassList = festivalCardPassRepository.findAll();
+
+        festivalCardPassList.forEach(s -> s.removeTicket(ticket.get()));
+        festivalCardPassRepository.saveAll(festivalCardPassList);
+
+        logger.info(festivalCardPassList.toString());
+        ticketRepository.deleteById(id);
     }
 }

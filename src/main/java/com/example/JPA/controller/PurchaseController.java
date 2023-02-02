@@ -22,4 +22,9 @@ public class PurchaseController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteTicket(@PathVariable("id") Long id){
+        ticketPurchaseService.deleteTicketById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

@@ -27,10 +27,10 @@ public class TicketController {
         ticketService.createTicket(ticket);
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteTicketById(@PathVariable("id") Long id){
-        ticketService.deleteTicketById(id);
-    }
+//    @DeleteMapping("/{id}")
+//    public void deleteTicketById(@PathVariable("id") Long id){
+//        ticketService.deleteTicketById(id);
+//    }
 
     @GetMapping("/{id}")
     public Ticket getTicketById(@PathVariable("id") Long id){

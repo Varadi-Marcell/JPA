@@ -71,17 +71,18 @@ public class FestivalCardPassService {
     @Transactional
     public void deleteFestivalCard(Long id){
 
-        FestivalCardPass festivalCardPass = em.find(FestivalCardPass.class,id);
-        festivalCardPass.getTicketList().forEach(s -> s.setFestivalCardPass(null));
-        ticketRepository.findAll().stream().forEach(s -> logger.info(s.toString()));
+
+//        FestivalCardPass festivalCardPass = em.find(FestivalCardPass.class,id);
+//        festivalCardPass.getTicketList().forEach(s -> s.setFestivalCardPass(null));
+//        ticketRepository.findAll().stream().forEach(s -> logger.info(s.toString()));
 //        em.flush();
 //        em.remove(festivalCardPass);
 
-//        Optional<FestivalCardPass> festivalCardPass=festivalCardPassRepository.findById(id);
-//        if (!festivalCardPass.isPresent()){
-//            throw new ResourceNotFoundException("Festival card with this id:"+id+" does not exists");
-//        }
-//
-//        festivalCardPassRepository.deleteById(id);
+        Optional<FestivalCardPass> festivalCardPass=festivalCardPassRepository.findById(id);
+        if (!festivalCardPass.isPresent()){
+            throw new ResourceNotFoundException("Festival card with this id:"+id+" does not exists");
+        }
+        festivalCardPass.get().getTicketList().clear();
+        festivalCardPassRepository.deleteById(id);
     }
 }
