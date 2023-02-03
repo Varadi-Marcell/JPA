@@ -2,11 +2,9 @@ package com.example.JPA.model;
 
 import com.example.JPA.dto.TicketDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.util.BeanUtil;
 import lombok.Data;
-import org.springframework.beans.BeanUtils;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;

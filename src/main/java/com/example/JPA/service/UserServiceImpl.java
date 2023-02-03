@@ -30,7 +30,6 @@ public class UserServiceImpl implements UserService {
 //        return userRepository.findAll().stream().map(User::getFestivalCardPass).collect(Collectors.toList());
 //    }
 
-
     public void createUser(User user) {
         userRepository.save(user);
     }

@@ -4,19 +4,30 @@ package com.example.JPA.model;
 import com.example.JPA.dto.UserDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
 
-import static javax.persistence.GenerationType.SEQUENCE;
+import static jakarta.persistence.GenerationType.AUTO;
+import static jakarta.persistence.GenerationType.SEQUENCE;
 
-@Entity
+
+@Entity(name = "User")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(
-        name = "user"
-//        uniqueConstraints = {
-//                @UniqueConstraint(name = "user_username_unique", columnNames = "username")
-//        }
+        name = "users",
+        uniqueConstraints= {
+        @UniqueConstraint(
+                name = "user_name_unique",
+                columnNames = "name")
+}
 )
-public class User implements Serializable {
+public class User {
     @Id
     @SequenceGenerator(
             name = "user_sequence",
@@ -38,7 +49,7 @@ public class User implements Serializable {
     @Column(name = "age")
     private int age;
 
-//    @JsonIgnore
+    //    @JsonIgnore
     @OneToOne(
             mappedBy = "user",
             orphanRemoval = true,
@@ -56,44 +67,10 @@ public class User implements Serializable {
         this.age = age;
     }
 
-    public User() {
-    }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
 
     public void setFestivalCardPass(FestivalCardPass festivalCardPass) {
         this.festivalCardPass = festivalCardPass;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", age=" + age +
-                '}';
     }
 
     public UserDto convertToDto(User user) {

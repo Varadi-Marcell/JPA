@@ -4,7 +4,7 @@ import com.example.JPA.dto.FestivalCardpassDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,10 +24,10 @@ public class FestivalCardPass {
     @OneToOne(
             fetch = FetchType.LAZY)
     @JoinColumn(
-            name = "user_id",
+            name = "users_id",
             referencedColumnName = "id",
             foreignKey = @ForeignKey(
-                    name = "user_id_fk"
+                    name = "users_id_fk"
             )
     )
     private User user;

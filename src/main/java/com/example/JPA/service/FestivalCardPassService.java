@@ -8,13 +8,13 @@ import com.example.JPA.model.FestivalCardPass;
 import com.example.JPA.model.User;
 import com.example.JPA.repository.TicketRepository;
 import com.example.JPA.repository.UserRepository;
+import jakarta.persistence.EntityManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PreRemove;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
