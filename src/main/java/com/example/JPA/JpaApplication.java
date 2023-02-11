@@ -22,7 +22,7 @@ public class JpaApplication {
 			UserRepository userRepository
 			){
 		return args -> {
-			User user = new User("marci",22);
+			User user = new User("marci","asd@mail.com",22);
 
 			FestivalCardPass festivalCardPass = new FestivalCardPass("marci",567,user);
 

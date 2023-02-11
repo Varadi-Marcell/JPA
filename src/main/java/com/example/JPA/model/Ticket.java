@@ -1,13 +1,19 @@
 package com.example.JPA.model;
 
 import com.example.JPA.dto.TicketDto;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import lombok.Data;
 
 import jakarta.persistence.*;
+
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+
 @Data
 @Entity
 @Table(name = "tickets")
@@ -24,25 +30,23 @@ public class Ticket implements Serializable {
 
     private Integer price;
 
-    private LocalDateTime startDate;
 
-    private LocalDateTime endDate;
+    private LocalDate startDate;
 
-    //    @JsonIgnore
-//    @ManyToMany(
-//            fetch = FetchType.LAZY)
-//    @JoinColumn(
-//            name = "festivalCardPass_id",
-//            referencedColumnName = "id",
-//            foreignKey = @ForeignKey(
-//                    name = "festivalCardPass_id_fk"
-//            )
-//    )
+
+    private LocalDate endDate;
+
+    private String genre;
+
+    private Boolean isAvailable;
+    private Boolean isUpcoming;
+    private Boolean isLimited;
+
     @JsonIgnore
     @ManyToMany(mappedBy = "ticketList")
-    private List<FestivalCardPass> festivalCardPass;
+    private List<FestivalCardPass> festivalCardPassList;
 
-    public Ticket(Long id, String name, String location, LocalDateTime startDate, Integer price, LocalDateTime endDate) {
+    public Ticket(Long id, String name, String location, LocalDate startDate, Integer price, LocalDate endDate) {
         this.id = id;
         this.name = name;
         this.location = location;
@@ -60,60 +64,14 @@ public class Ticket implements Serializable {
     public Ticket() {
     }
 
-    public Long getId() {
-        return id;
+
+    public void setFestivalCardPassList(FestivalCardPass festivalCardPassList) {
+        this.festivalCardPassList.add(festivalCardPassList);
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public LocalDateTime getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(LocalDateTime startDate) {
-        this.startDate = startDate;
-    }
-
-    public LocalDateTime getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDateTime endDate) {
-        this.endDate = endDate;
-    }
-
-    public void setFestivalCardPass(FestivalCardPass festivalCardPass) {
-        this.festivalCardPass.add(festivalCardPass);
-    }
-
-    public Integer getPrice() {
-        return price;
-    }
-
-    public void setPrice(Integer price) {
-        this.price = price;
-    }
-
-    public List<FestivalCardPass> getFestivalCardPass() {
-        return festivalCardPass;
+    public void removeFestivalCardPass(FestivalCardPass festivalCardPass) {
+        this.festivalCardPassList.remove(festivalCardPass);
+        festivalCardPass.getTicketList().remove(this);
     }
 
     @Override
@@ -125,7 +83,7 @@ public class Ticket implements Serializable {
                 ", price=" + price +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
-                ", festivalCardPass=" + festivalCardPass +
+                ", festivalCardPass=" + festivalCardPassList +
                 '}';
     }
 
@@ -136,7 +94,12 @@ public class Ticket implements Serializable {
                 ticket.getLocation(),
                 ticket.getPrice(),
                 ticket.getStartDate(),
-                ticket.getEndDate()
+                ticket.getEndDate(),
+                ticket.getGenre(),
+                ticket.getIsAvailable(),
+                ticket.getIsUpcoming(),
+                ticket.getIsLimited()
+
         );
     }
 }

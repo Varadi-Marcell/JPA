@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/purchase")
+@RequestMapping("/api/v1/purchase")
 public class PurchaseController {
 
     private final TicketPurchaseService ticketPurchaseService;
@@ -20,11 +20,5 @@ public class PurchaseController {
     public ResponseEntity<Void> createPurchase(@RequestBody TicketPurchaseRequest ticketPurchaseRequest){
         ticketPurchaseService.purchaseTicket(ticketPurchaseRequest);
         return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteTicket(@PathVariable("id") Long id){
-        ticketPurchaseService.deleteTicketById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

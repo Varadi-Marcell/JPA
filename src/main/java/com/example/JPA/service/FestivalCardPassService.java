@@ -56,10 +56,9 @@ public class FestivalCardPassService {
         }
 
         Optional<User> user = userRepository.findById(request.getId());
-
         FestivalCardPass festivalCardPass = new FestivalCardPass(
-                request.getFestivalCardPass().getCardHolderName(),
-                request.getFestivalCardPass().getAmount(),
+                request.getName(),
+                request.getAmount(),
                 user.get()
         );
 

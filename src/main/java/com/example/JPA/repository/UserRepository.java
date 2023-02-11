@@ -7,17 +7,14 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @Transactional(readOnly = true)
 public interface UserRepository extends JpaRepository<User,Long> {
 
-//    User findUserByTicketId(Long ticket_id);
-//
-//    List<User> findAllByTicketName(String name);
-
-//    @Query(value = "SELECT * FROM User u",nativeQuery = true)
-//    List<User> findAll();
+    Optional<User> findByEmail(String email);
 
     boolean existsUsersById(Long id);
+    boolean existsUsersByEmail(String email);
 }

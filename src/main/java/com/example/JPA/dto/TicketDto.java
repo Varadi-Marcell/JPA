@@ -1,13 +1,8 @@
 package com.example.JPA.dto;
-
-import com.example.JPA.model.FestivalCardPass;
-import com.example.JPA.model.Ticket;
+import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
-import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -21,9 +16,16 @@ public class TicketDto {
 
     private Integer price;
 
-    private LocalDateTime startDate;
+    private LocalDate startDate;
 
-    private LocalDateTime endDate;
+    private LocalDate endDate;
+
+    private String genre;
+
+    private Boolean isAvailable;
+    private Boolean isUpcoming;
+    private Boolean isLimited;
+
 
 //    private FestivalCardPass festivalCardPass;
 }

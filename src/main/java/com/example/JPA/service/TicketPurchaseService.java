@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TicketPurchaseService {
@@ -61,21 +62,5 @@ public class TicketPurchaseService {
         return (int) deductedFunds;
     }
 
-//    @Transactional
-    public void deleteTicketById(Long id) {
 
-        if (!ticketRepository.existsTicketById(id)) {
-            throw new ResourceNotFoundException("Ticket with id:" + id + " not found!");
-        }
-
-        Optional<Ticket> ticket = ticketRepository.findById(id);
-
-        List<FestivalCardPass> festivalCardPassList = festivalCardPassRepository.findAll();
-
-        festivalCardPassList.forEach(s -> s.removeTicket(ticket.get()));
-        festivalCardPassRepository.saveAll(festivalCardPassList);
-
-        logger.info(festivalCardPassList.toString());
-        ticketRepository.deleteById(id);
-    }
 }

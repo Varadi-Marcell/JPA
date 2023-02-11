@@ -4,9 +4,12 @@ import com.example.JPA.dto.TicketDto;
 import com.example.JPA.exceptions.ResourceNotFoundException;
 import com.example.JPA.model.Ticket;
 
+import com.example.JPA.repository.FestivalCardPassRepository;
 import com.example.JPA.repository.TicketRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -16,8 +19,11 @@ import java.util.stream.Collectors;
 public class TicketService {
     private final TicketRepository ticketRepository;
 
-    public TicketService(TicketRepository ticketRepository) {
+    private final FestivalCardPassRepository festivalCardPassRepository;
+
+    public TicketService(TicketRepository ticketRepository, FestivalCardPassRepository festivalCardPassRepository) {
         this.ticketRepository = ticketRepository;
+        this.festivalCardPassRepository = festivalCardPassRepository;
     }
 
     public List<TicketDto> getAllTickets() {
@@ -28,11 +34,11 @@ public class TicketService {
 
     public void createTicket(Ticket ticket) {
 
-        LocalDateTime startDate = ticket.getStartDate();
-        LocalDateTime endDate = ticket.getEndDate();
+        LocalDate startDate = ticket.getStartDate();
+        LocalDate endDate = ticket.getEndDate();
 
-        if (startDate.isAfter(endDate) || startDate.isEqual(endDate)){
-            throw new RuntimeException("A kezdési idő nem lehet később vagy a ugyanabban az időpontban ");
+        if (startDate.isAfter(endDate)){
+            throw new RuntimeException("A kezdési idő nem lehet későbbi időpontban ");
         }
 
         ticketRepository.save(ticket);
@@ -44,13 +50,5 @@ public class TicketService {
                 .orElseThrow(() ->new ResourceNotFoundException("Ticket with id:" + id + " not found!"));
     }
 
-    public void deleteTicketById(Long id) {
-        if (!ticketRepository.existsTicketById(id)) {
-            throw new ResourceNotFoundException("Ticket with id:" + id + " not found!");
-        }
 
-        Optional<Ticket> ticket = ticketRepository.findById(id);
-//        ticket.get().get
-        ticketRepository.deleteById(id);
-    }
 }

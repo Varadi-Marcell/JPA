@@ -2,6 +2,7 @@ package com.example.JPA.dto;
 
 import com.example.JPA.model.FestivalCardPass;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ import java.io.Serializable;
 public class FestivalCardPassAddDto implements Serializable {
 
     private Long id;
-    private FestivalCardPass festivalCardPass;
+    private String name;
+    private Integer amount;
 
 }

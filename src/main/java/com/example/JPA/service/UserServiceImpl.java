@@ -1,6 +1,7 @@
 package com.example.JPA.service;
 
 import com.example.JPA.dto.UserDto;
+import com.example.JPA.exceptions.EmailAlreadyExistsException;
 import com.example.JPA.exceptions.ResourceNotFoundException;
 import com.example.JPA.model.User;
 import com.example.JPA.repository.UserRepository;
@@ -31,7 +32,12 @@ public class UserServiceImpl implements UserService {
 //    }
 
     public void createUser(User user) {
+
+        if (userRepository.existsUsersByEmail(user.getEmail())){
+            throw new EmailAlreadyExistsException("This email:"+user.getEmail()+" already exists!");
+        }
         userRepository.save(user);
+
     }
 
     public User getUserById(Long id) {

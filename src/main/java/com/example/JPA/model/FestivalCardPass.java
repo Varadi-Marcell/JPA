@@ -94,13 +94,13 @@ public class FestivalCardPass {
 
     public void addTicket(Ticket ticket) {
         this.ticketList.add(ticket);
-        ticket.setFestivalCardPass(this);
+        ticket.setFestivalCardPassList(this);
     }
 
     public void removeTicket(Ticket ticket) {
         this.ticketList.remove(ticket);
-        ticket.getFestivalCardPass().remove(this);
-        ticket.setFestivalCardPass(null);
+        ticket.getFestivalCardPassList().remove(this);
+        ticket.setFestivalCardPassList(null);
     }
 
     @Override

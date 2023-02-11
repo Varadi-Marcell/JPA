@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/cardPass")
+@RequestMapping("/api/v1/cardPass")
 public class FestivalCardPassController {
 
     private final FestivalCardPassService festivalCardPassService;
