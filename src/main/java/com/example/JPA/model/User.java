@@ -3,7 +3,7 @@ package com.example.JPA.model;
 import com.example.JPA.dto.UserDto;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
+//import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -33,16 +33,18 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 }
 )
 public class User implements UserDetails {
+
+//    @SequenceGenerator(
+//            name = "user_sequence",
+//            sequenceName = "user_sequence",
+//            allocationSize = 1
+//    )
+//    @GeneratedValue(
+//            strategy = SEQUENCE,
+//            generator = "user_sequence"
+//    )
     @Id
-    @SequenceGenerator(
-            name = "user_sequence",
-            sequenceName = "user_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = SEQUENCE,
-            generator = "user_sequence"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
@@ -57,7 +59,7 @@ public class User implements UserDetails {
     @Column(name = "email",
             nullable = false,
             columnDefinition = "TEXT")
-    @Email
+//    @Email
     private String email;
     @Column(name = "age")
     private int age;
