@@ -2,6 +2,7 @@ package com.example.JPA.controller;
 
 import com.example.JPA.dto.UserDto;
 import com.example.JPA.model.User;
+import com.example.JPA.repository.UserRepository;
 import com.example.JPA.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +29,11 @@ public class UserController {
         return new ResponseEntity<>(userService.getAllUser(),HttpStatus.OK);
     }
 
+    @GetMapping("/sec")
+    public List<User> getAllUser2(){
+        return userService.getUsers();
+    }
+
     @PostMapping(consumes = "application/json")
     public ResponseEntity<Void> createUser(@RequestBody User user){
         userService.createUser(user);
@@ -47,6 +53,10 @@ public class UserController {
         userService.deleteUserById(id);
     }
 
+    @GetMapping("/profile")
+    public ResponseEntity<UserDto> getUserProfile(){
+        return new ResponseEntity<>(userService.getUserProfile(),HttpStatus.OK);
+    }
 //    @GetMapping("/ticket/{id}")
 //    public User getUserByTicketId(@PathVariable("id") Long id){
 //        return userServiceimpl.findUserByTicketId(id);

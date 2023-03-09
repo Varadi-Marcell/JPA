@@ -4,10 +4,7 @@ import com.example.JPA.dto.UserDto;
 
 import jakarta.persistence.*;
 //import jakarta.validation.constraints.Email;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,12 +12,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-import static jakarta.persistence.GenerationType.AUTO;
-import static jakarta.persistence.GenerationType.SEQUENCE;
 
 
 @Entity(name = "User")
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -72,12 +68,20 @@ public class User implements UserDetails {
             orphanRemoval = true,
             cascade = {CascadeType.PERSIST, CascadeType.REMOVE}
     )
-    private FestivalCardPass festivalCardPass;
+    private CardPass cardPass;
 
-    public User(String name, String email, int age) {
+    @PrePersist
+    private void createCardPass() {
+        this.cardPass = new CardPass(1000,this);
+        this.cardPass.setUser(this);
+    }
+
+    public User(String name, String email, String password,int age,Role role) {
         this.name = name;
         this.email = email;
+        this.password= password;
         this.age = age;
+        this.role = role;
     }
 
     public UserDto convertToDto(User user) {
@@ -86,7 +90,8 @@ public class User implements UserDetails {
                 user.getName(),
                 user.getEmail(),
                 user.age,
-                user.getFestivalCardPass()
+                user.getRole().toString(),
+                user.getCardPass()
         );
     }
 
@@ -123,5 +128,18 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", age=" + age +
+                ", role=" + role +
+                ", festivalCardPass=" + cardPass +
+                '}';
     }
 }

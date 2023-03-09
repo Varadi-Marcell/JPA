@@ -2,9 +2,7 @@ package com.example.JPA.controller;
 
 import com.example.JPA.dto.TicketDto;
 import com.example.JPA.model.Ticket;
-import com.example.JPA.service.TicketService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.example.JPA.service.serviceImpl.TicketService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

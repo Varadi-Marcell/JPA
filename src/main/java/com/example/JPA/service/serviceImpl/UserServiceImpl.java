@@ -1,10 +1,12 @@
-package com.example.JPA.service;
+package com.example.JPA.service.serviceImpl;
 
 import com.example.JPA.dto.UserDto;
 import com.example.JPA.exceptions.EmailAlreadyExistsException;
 import com.example.JPA.exceptions.ResourceNotFoundException;
 import com.example.JPA.model.User;
 import com.example.JPA.repository.UserRepository;
+import com.example.JPA.service.UserService;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,12 +29,22 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
-//    public List<FestivalCardPass> getAllUserWithPass() {
-//        return userRepository.findAll().stream().map(User::getFestivalCardPass).collect(Collectors.toList());
-//    }
+    public List<User> getUsers(){
+        return userRepository.findAll();
+    }
+
+    @Override
+    public UserDto getUserProfile() {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+//        User user = userRepository.findByEmail(userEmail).get();
+        return Optional.of(userRepository.findByEmail(userEmail)
+                .map(user -> user.convertToDto(user))
+                .get())
+                .orElseThrow(() -> new RuntimeException("Server error"));
+    }
+
 
     public void createUser(User user) {
-
         if (userRepository.existsUsersByEmail(user.getEmail())){
             throw new EmailAlreadyExistsException("This email:"+user.getEmail()+" already exists!");
         }
@@ -52,19 +64,4 @@ public class UserServiceImpl implements UserService {
         }
         userRepository.deleteById(id);
     }
-//    public User findUserByTicketId(Long id){
-//        User user = userRepository.findUserByTicketId(id);
-//        if (user == null){
-//            throw new ResourceNotFoundException("User with this ticket id:" + id + " not found!");
-//        }
-//        return user;
-//    }
-//
-//    public List<User> findAllUsersByTicketName(String name){
-//        List<User> userList = userRepository.findAllByTicketName(name);
-//        if (userList.isEmpty()){
-//            throw new ResourceNotFoundException("Users with this ticket name:" + name + " not found!");
-//        }
-//        return userList;
-//    }
 }

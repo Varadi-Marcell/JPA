@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -16,6 +17,7 @@ public class FestivalCardpassDto {
     private Long id;
     private String cardHolderName;
     private Integer amount;
-    private List<Ticket> ticketList = new ArrayList<>();
+//    private List<Order> orderSet;
+//    private List<Ticket> ticketList = new ArrayList<>();
 
 }

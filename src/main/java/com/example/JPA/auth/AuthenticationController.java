@@ -1,7 +1,9 @@
 package com.example.JPA.auth;
 
+import com.example.JPA.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/auth")
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController {
 
     private final AuthenticationService service;
+    private final UserDetailsService userDetailsService;
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(

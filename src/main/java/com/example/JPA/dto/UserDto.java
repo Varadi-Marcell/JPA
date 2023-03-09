@@ -1,6 +1,6 @@
 package com.example.JPA.dto;
 
-import com.example.JPA.model.FestivalCardPass;
+import com.example.JPA.model.CardPass;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +14,8 @@ public class UserDto {
 
     private String email;
     private int age;
-    private FestivalCardPass festivalCardPass;
+    private String role;
+
+    private CardPass cardPass;
 
 }

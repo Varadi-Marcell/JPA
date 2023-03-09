@@ -1,14 +1,9 @@
 package com.example.JPA;
 
-import com.example.JPA.model.Ticket;
 import com.example.JPA.repository.TicketRepository;
-import com.example.JPA.service.TicketService;
-import org.junit.jupiter.api.Test;
+import com.example.JPA.service.serviceImpl.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @SpringBootTest
 public class TicketTest {

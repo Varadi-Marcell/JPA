@@ -1,8 +1,6 @@
 package com.example.JPA.dto;
 
-import com.example.JPA.model.FestivalCardPass;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
