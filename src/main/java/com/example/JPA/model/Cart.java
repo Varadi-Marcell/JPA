@@ -7,6 +7,8 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 @Entity
 @RequiredArgsConstructor
@@ -14,6 +16,7 @@ import java.util.List;
 @Builder
 @Getter
 @Setter
+@Table(name = "Cart")
 public class Cart {
 
     @Id
@@ -28,7 +31,6 @@ public class Cart {
     @JsonIgnore
     @OneToMany(
             mappedBy = "cart",
-//            cascade = {CascadeType.PERSIST,CascadeType.REMOVE},
             cascade = CascadeType.ALL,
             orphanRemoval = true,
             fetch = FetchType.EAGER
@@ -40,7 +42,10 @@ public class Cart {
             this.itemList.add(item);
             item.setCart(this);
         }
+        calculateAmount();
     }
+
+
 
     public Cart(CardPass cardPass) {
         this.cardPass = cardPass;
@@ -57,6 +62,16 @@ public class Cart {
         this.itemList.clear();
     }
 
+    public Stream<Item> getItemStream() {
+        return itemList.stream();
+    }
+    public void calculateAmount(){
+        double totalAmount = 0.0;
+        for (Item item : itemList) {
+            totalAmount += item.getAmount() * item.getQuantity();
+        }
+        this.amount=totalAmount;
+    }
     @Override
     public String toString() {
         return "ShoppingCart{" +

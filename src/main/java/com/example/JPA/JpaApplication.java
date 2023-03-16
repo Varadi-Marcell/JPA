@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.IntStream;
@@ -49,11 +50,19 @@ public class JpaApplication {
 						int randomCityIndex = new Random().nextInt(cities.length);
 						int randomMusicIndex = new Random().nextInt(musicGenres.length);
 
+						LocalDate start = LocalDate.of(2023, Month.JANUARY, 1);
+						long days = ChronoUnit.DAYS.between(start, LocalDate.now());
+						LocalDate randomDate = start.plusDays(new Random().nextInt((int) days + 1));
+
+						LocalDate end = LocalDate.of(2023, Month.APRIL, 1);
+						days = ChronoUnit.DAYS.between(start, LocalDate.now());
+						LocalDate randomEndDate = start.plusDays(new Random().nextInt((int) days + 1));
+
 						return new Ticket(
 								faker.app().name(),
 								cities[randomCityIndex],
-								LocalDate.of(2020, Month.JANUARY, 8),
-								LocalDate.of(2020, Month.JANUARY, 8),
+								randomDate,
+								randomEndDate,
 								faker.number().numberBetween(100, 200),
 								musicGenres[randomMusicIndex]
 						);

@@ -36,13 +36,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto getUserProfile() {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-//        User user = userRepository.findByEmail(userEmail).get();
         return Optional.of(userRepository.findByEmail(userEmail)
-                .map(user -> user.convertToDto(user))
+//                .map(user -> user.convertToDto(user,user.getCardPass()))
+                .map(user -> new UserDto().toUserDto(user,user.getCardPass(),user.getCardPass().getOrders()))
                 .get())
                 .orElseThrow(() -> new RuntimeException("Server error"));
     }
 
+    @Override
+    public User getUser(){
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userRepository.findByEmail(userEmail).orElseThrow(() -> new RuntimeException("User not found"));
+    }
 
     public void createUser(User user) {
         if (userRepository.existsUsersByEmail(user.getEmail())){

@@ -85,14 +85,7 @@ public class User implements UserDetails {
     }
 
     public UserDto convertToDto(User user) {
-        return new UserDto(
-                user.getId(),
-                user.getName(),
-                user.getEmail(),
-                user.age,
-                user.getRole().toString(),
-                user.getCardPass()
-        );
+        return new UserDto().toUserDto(user);
     }
 
     @Override

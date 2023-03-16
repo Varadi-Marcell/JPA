@@ -57,12 +57,4 @@ public class UserController {
     public ResponseEntity<UserDto> getUserProfile(){
         return new ResponseEntity<>(userService.getUserProfile(),HttpStatus.OK);
     }
-//    @GetMapping("/ticket/{id}")
-//    public User getUserByTicketId(@PathVariable("id") Long id){
-//        return userServiceimpl.findUserByTicketId(id);
-//    }
-//    @GetMapping("/ticket/all/{name}")
-//    public List<User> getAllUserByTicketId(@PathVariable("name") String name){
-//        return userServiceimpl.findAllUsersByTicketName(name);
-//    }
 }

@@ -1,13 +1,16 @@
 package com.example.JPA.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity(name = "Orders")
 @Table(name = "Orders")
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Orders  {
@@ -15,14 +18,32 @@ public class Orders  {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-
-   private String customerName;
-
-   private Double amount;
-
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String event;
+    private int quantity;
+    private double amount;
+    private LocalDate startDate;
+    private LocalDate endDate;
    @ManyToOne
    private CardPass cardPass;
 
+    public Orders(String firstName, String lastName, String email) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
 
+    }
 
+    public Orders(String firstName, String lastName, String email, String event, int quantity, double amount,LocalDate startDate,LocalDate endDate) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.event = event;
+        this.quantity = quantity;
+        this.amount = amount;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
 }

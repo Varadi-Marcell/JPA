@@ -11,6 +11,7 @@ import lombok.*;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "Item")
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

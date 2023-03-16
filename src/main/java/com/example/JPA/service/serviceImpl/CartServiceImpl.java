@@ -11,13 +11,18 @@ import com.example.JPA.repository.ItemRepository;
 import com.example.JPA.repository.TicketRepository;
 import com.example.JPA.repository.UserRepository;
 import com.example.JPA.service.CartService;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class CartServiceImpl implements CartService {
 
     private final CartRepository cartRepository;
@@ -44,10 +49,17 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
+    @Transactional
     public void updateItemQuantity(UpdateItemDto itemDto) {
+        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        Cart cart = userRepository.findByEmail(userEmail).get().getCardPass().getCart();
+
         Item item = itemRepository.findById(itemDto.getItemId()).get();
         item.setQuantity(itemDto.getQuantity());
+        cart.calculateAmount();
+
         itemRepository.save(item);
+        cartRepository.save(cart);
     }
 
     @Override

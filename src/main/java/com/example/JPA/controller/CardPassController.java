@@ -35,9 +35,5 @@ public class CardPassController {
         cardPassService.create(cardPass);
     }
 
-//    @DeleteMapping("{id}")
-//    public ResponseEntity<Void> deletecreateFestivalCardPass(@PathVariable("id") Long id){
-//        festivalCardPassService.deleteFestivalCard(id);
-//        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-//    }
+
 }

@@ -35,14 +35,6 @@ public class CardPass {
     )
     private User user;
 
-//    @JsonIgnore
-//    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-//    @JoinTable(
-//            name = "ticketList",
-//            joinColumns = @JoinColumn(name = "festivalCardPass_id"),
-//            inverseJoinColumns = @JoinColumn(name = "ticket_id"))
-//    private List<Ticket> ticketList = new ArrayList<>();
-
     @OneToOne(
             orphanRemoval = true,
             cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
@@ -56,7 +48,7 @@ public class CardPass {
             orphanRemoval = true,
             cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
             mappedBy = "cardPass",
-            fetch = FetchType.LAZY
+            fetch = FetchType.EAGER
     )
     private List<Orders> orders = new ArrayList<>();
 
@@ -108,30 +100,12 @@ public class CardPass {
         this.amount = amount;
     }
 
-//    public List<Ticket> getTicketList() {
-//        return ticketList;
-//    }
-//
-//    public void addTicket(Ticket ticket) {
-//        this.ticketList.add(ticket);
-//        ticket.setFestivalCardPassList(this);
-//    }
-//
-//    public void removeTicket(Ticket ticket) {
-//        this.ticketList.remove(ticket);
-//        ticket.getFestivalCardPassList().remove(this);
-//        ticket.setFestivalCardPassList(null);
-//    }
-//    public void addOrder(Order order){
-//        if(!this.orders.contains(order)){
-//            this.orders.add(order);
-//            order.setFestivalCardPass(this);
-//        }
-//    }
-//    public void removeOrder(Order order){
-//        this.orders.remove(order);
-//        order.getFestivalCardPass().re;
-//    }
+    public void addOrder(Orders order){
+        if(!this.orders.contains(order)){
+            this.orders.add(order);
+            order.setCardPass(this);
+        }
+    }
 
 
     @Override
@@ -140,7 +114,7 @@ public class CardPass {
                 "id=" + id +
                 ", cardHolderName='" + cardHolderName + '\'' +
                 ", amount=" + amount +
-//                ", orders=" + orders +
+                ", orders=" + orders +
                 ", cart=" + cart +
                 '}';
     }

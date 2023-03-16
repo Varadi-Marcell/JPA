@@ -1,15 +1,24 @@
 package com.example.JPA.service.serviceImpl;
 
 import com.example.JPA.dto.TicketDto;
+import com.example.JPA.dto.TicketDtoResponse;
 import com.example.JPA.exceptions.ResourceNotFoundException;
+import com.example.JPA.model.Cart;
+import com.example.JPA.model.Item;
 import com.example.JPA.model.Ticket;
 
-import com.example.JPA.repository.CardPassRepository;
+import com.example.JPA.repository.CartRepository;
+import com.example.JPA.repository.ItemRepository;
 import com.example.JPA.repository.TicketRepository;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -17,20 +26,27 @@ import java.util.stream.Collectors;
 @Service
 public class TicketService {
     private final TicketRepository ticketRepository;
+    private final CartRepository cartRepository;
 
-    private final CardPassRepository cardPassRepository;
-
-    public TicketService(TicketRepository ticketRepository, CardPassRepository cardPassRepository) {
+    public TicketService(TicketRepository ticketRepository, CartRepository cartRepository) {
         this.ticketRepository = ticketRepository;
-        this.cardPassRepository = cardPassRepository;
+        this.cartRepository = cartRepository;
     }
 
-    public List<TicketDto> getAllTickets() {
+    public TicketDtoResponse getAllTickets(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<Ticket> ticketPage = ticketRepository.findAll(pageRequest);
 
-        return ticketRepository.findAll().stream()
-                .map(s -> s.ticketToTicketDto(s))
-                .collect(Collectors.toList());
+        return new TicketDtoResponse(ticketPage.getContent()
+                        .stream()
+                        .map(s -> s.ticketToTicketDto(s))
+                        .toList(),
+                (int) ticketPage.getTotalElements()
+        );
     }
+
+
+
 
     public void createTicket(Ticket ticket) {
 
@@ -48,6 +64,25 @@ public class TicketService {
         return Optional.of(ticketRepository.findById(id))
                 .get()
                 .orElseThrow(() ->new ResourceNotFoundException("Ticket with id:" + id + " not found!"));
+    }
+
+    @Transactional
+    public void deleteTicketById(Long ticketId) {
+        if (!ticketRepository.existsTicketById(ticketId)) {
+            throw new ResourceNotFoundException("Ticket with id:" + ticketId + " not found!");
+        }
+
+        List<Cart> cartList = cartRepository.findAll();
+        cartList.forEach(cart -> {
+            List<Item> itemsToRemove = cart.getItemStream()
+                    .filter(item -> item.getTicketId().equals(ticketId))
+                    .toList();
+            cart.getItemList().removeIf(item -> item.getTicketId().equals(ticketId));
+            cartRepository.save(cart);
+        });
+
+        ticketRepository.deleteById(ticketId);
+
     }
 
 
