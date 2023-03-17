@@ -76,8 +76,9 @@ public class CartServiceImpl implements CartService {
     public void removeItemFromCartByItemId(Long itemId) {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         Cart cart = userRepository.findByEmail(userEmail).get().getCardPass().getCart();
-
-        cart.removeItemFromCart(itemRepository.findById(itemId).get());
+        Item item = itemRepository.findById(itemId).orElseThrow();
+        cart.setAmount(cart.getAmount()-(item.getAmount()*item.getQuantity()));
+        cart.removeItemFromCart(item);
         cartRepository.save(cart);
     }
 

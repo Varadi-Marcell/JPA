@@ -1,4 +1,4 @@
-package com.example.JPA.controller;
+package com.example.JPA.controller.restApi;
 
 import com.example.JPA.dto.CartDto;
 import com.example.JPA.dto.CreateItemRequest;

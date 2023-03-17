@@ -1,4 +1,4 @@
-package com.example.JPA.controller;
+package com.example.JPA.controller.restApi;
 
 import com.example.JPA.dto.UserDto;
 import com.example.JPA.model.User;
