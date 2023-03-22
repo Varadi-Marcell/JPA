@@ -1,9 +1,11 @@
 package com.example.JPA.controller;
 
 import com.example.JPA.dto.TicketDtoResponse;
+import com.example.JPA.dto.UpdateItemDto;
 import com.example.JPA.handshakeHandlers.Message;
 import com.example.JPA.handshakeHandlers.PrincipalUser;
 import com.example.JPA.handshakeHandlers.ResponseMessage;
+import com.example.JPA.model.Cart;
 import com.example.JPA.service.CartService;
 import com.example.JPA.service.UserService;
 import com.example.JPA.service.serviceImpl.TicketService;
@@ -15,6 +17,8 @@ import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
@@ -36,7 +40,7 @@ public class CartControllerWebsocket {
 
     @MessageMapping("view-cart")
     @SendTo("cart-response")
-    public ResponseEntity<?> viewCart(){
+    public ResponseEntity<?> viewCart() {
         return new ResponseEntity<>(cartService.viewCart(), HttpStatus.OK);
 
     }
@@ -72,18 +76,35 @@ public class CartControllerWebsocket {
 //        messagingTemplate.convertAndSendToUser(user.getId(), "/topic/private", msg);
 //    }
 
+    //    @MessageMapping("/secret")
+//    public void getAllTicket(PrincipalUser user,@RequestBody Map<String, Integer> pagination) {
+//        int page = pagination.get("page");
+//        int size = pagination.get("size");
+//        PageRequest pageRequest = PageRequest.of(page, size);
+//
+//        messagingTemplate.convertAndSendToUser(user.getId(), "/topic/private", ticketService.getAllTickets2(pageRequest));
+//    }
     @MessageMapping("/secret")
-    public void getAllTicket(PrincipalUser user,@RequestBody Map<String, Integer> pagination) {
+    public void getAllTicket(@Header("simpSessionId") String sessionId, @RequestBody Map<String, Integer> pagination) {
         int page = pagination.get("page");
         int size = pagination.get("size");
         PageRequest pageRequest = PageRequest.of(page, size);
 
-        messagingTemplate.convertAndSendToUser(user.getId(), "/topic/private", ticketService.getAllTickets2(pageRequest));
-    }
-    public void deleteTicketById(){
-        messagingTemplate.convertAndSend("/topic/ticket-response", ticketService.findAll());
+        System.out.println(sessionId);
+        SimpMessageHeaderAccessor headerAccessor = SimpMessageHeaderAccessor.create(SimpMessageType.MESSAGE);
+        headerAccessor.setSessionId(sessionId);
+        headerAccessor.setLeaveMutable(true);
+        messagingTemplate.convertAndSendToUser(sessionId, "/topic/private", ticketService.getAllTickets2(pageRequest), headerAccessor.getMessageHeaders());
+
+//        messagingTemplate.convertAndSendToUser(sessionId, "/topic/private", ticketService.getAllTickets2(pageRequest));
     }
 
+    private void sendMessageToUser(@Payload Message message,
+                                   @Header("simpSessionId") String sessionId) {
+    }
+    public void deleteTicketById() {
+        messagingTemplate.convertAndSend("/topic/ticket-response", ticketService.findAll());
+    }
 
 
 }

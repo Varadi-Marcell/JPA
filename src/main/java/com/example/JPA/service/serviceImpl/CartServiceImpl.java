@@ -50,7 +50,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     @Transactional
-    public void updateItemQuantity(UpdateItemDto itemDto) {
+    public Optional<CartDto> updateItemQuantity(UpdateItemDto itemDto) {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         Cart cart = userRepository.findByEmail(userEmail).get().getCardPass().getCart();
 
@@ -60,6 +60,13 @@ public class CartServiceImpl implements CartService {
 
         itemRepository.save(item);
         cartRepository.save(cart);
+
+        List<ItemDto> itemDtos = cart.getItemList().stream()
+                .map(item1 -> new ItemDto(item1, ticketRepository.findById(item1.getTicketId()).get()))
+                .toList();
+
+        return Optional.of(new CartDto(cart.getId(), cart.getAmount(), itemDtos));
+
     }
 
     @Override
@@ -73,13 +80,22 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void removeItemFromCartByItemId(Long itemId) {
+    public Optional<CartDto> removeItemFromCartByItemId(Long itemId) {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         Cart cart = userRepository.findByEmail(userEmail).get().getCardPass().getCart();
         Item item = itemRepository.findById(itemId).orElseThrow();
+
+
         cart.setAmount(cart.getAmount()-(item.getAmount()*item.getQuantity()));
         cart.removeItemFromCart(item);
         cartRepository.save(cart);
+
+        List<ItemDto> itemDtos = cart.getItemList().stream()
+                .map(item1 -> new ItemDto(item1, ticketRepository.findById(item1.getTicketId()).get()))
+                .toList();
+
+        return Optional.of(new CartDto(cart.getId(), cart.getAmount(), itemDtos));
+
     }
 
 
