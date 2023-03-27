@@ -50,8 +50,6 @@ public class TicketTest {
     @MockBean
     private TicketService ticketService;
 
-    @Autowired
-    private SimpMessagingTemplate messagingTemplate;
 
     @Test
     public void deleteTicketById() throws Exception {
@@ -68,7 +66,6 @@ public class TicketTest {
         mockMvc.perform(get("/api/v1/ticket/{id}", ticket.getId()))
                 .andExpect(status().isNotFound());
 
-        verify(messagingTemplate, times(1)).convertAndSend("/topic/ticket-response");
 
     }
 

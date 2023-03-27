@@ -1,6 +1,6 @@
 package com.example.JPA.auth;
 
-import com.example.JPA.config.security.JwtService;
+import com.example.JPA.config.JwtService;
 import com.example.JPA.model.Role;
 import com.example.JPA.model.User;
 import com.example.JPA.repository.UserRepository;

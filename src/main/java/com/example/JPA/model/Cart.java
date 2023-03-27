@@ -11,7 +11,6 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 @Entity
-@RequiredArgsConstructor
 @AllArgsConstructor
 @Builder
 @Getter
@@ -37,41 +36,45 @@ public class Cart {
     )
     private List<Item> itemList = new ArrayList<>();
 
+    public Cart() {
+
+    }
+
     public void addCartItem(Item item) {
-        if (!this.itemList.contains(item)){
+        if (!this.itemList.contains(item)) {
             this.itemList.add(item);
             item.setCart(this);
         }
         calculateAmount();
     }
 
-
-
     public Cart(CardPass cardPass) {
         this.cardPass = cardPass;
     }
 
     public void removeItemFromCart(Item item) {
-        if (this.itemList.contains(item)){
+        if (this.itemList.contains(item)) {
             this.itemList.remove(item);
             item.setCart(null);
         }
     }
 
-    public void clearCart(){
+    public void clearCart() {
         this.itemList.clear();
     }
 
     public Stream<Item> getItemStream() {
         return itemList.stream();
     }
-    public void calculateAmount(){
+
+    public void calculateAmount() {
         double totalAmount = 0.0;
         for (Item item : itemList) {
             totalAmount += item.getAmount() * item.getQuantity();
         }
-        this.amount=totalAmount;
+        this.amount = totalAmount;
     }
+
     @Override
     public String toString() {
         return "ShoppingCart{" +

@@ -1,6 +1,6 @@
 package com.example.JPA.model;
 
-import com.example.JPA.dto.FestivalCardpassDto;
+import com.example.JPA.dto.CardpassDto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.*;
@@ -68,45 +68,13 @@ public class CardPass {
         this.cart.setCardPass(this);
     }
 
-    public User getUser() {
-        return user;
-    }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getCardHolderName() {
-        return cardHolderName;
-    }
-
-    public void setCardHolderName(String cardHolderName) {
-        this.cardHolderName = cardHolderName;
-    }
-
-    public Integer getAmount() {
-        return amount;
-    }
-
-    public void setAmount(Integer amount) {
-        this.amount = amount;
-    }
-
-    public void addOrder(Orders order){
-        if(!this.orders.contains(order)){
+    public void addOrder(Orders order) {
+        if (!this.orders.contains(order)) {
             this.orders.add(order);
             order.setCardPass(this);
         }
     }
-
 
     @Override
     public String toString() {
@@ -120,13 +88,11 @@ public class CardPass {
     }
 
 
-    public FestivalCardpassDto convertToDTO(CardPass cardPass) {
-        return new FestivalCardpassDto(
+    public CardpassDto convertToDTO(CardPass cardPass) {
+        return new CardpassDto(
                 cardPass.getId(),
                 cardPass.getCardHolderName(),
                 cardPass.getAmount()
-//                festivalCardPass.getOrders()
-//                festivalCardPass.getTicketList()
         );
     }
 

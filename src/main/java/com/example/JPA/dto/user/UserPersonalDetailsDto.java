@@ -1,10 +1,9 @@
-package com.example.JPA.dto;
+package com.example.JPA.dto.user;
 
-import com.example.JPA.model.Cart;
 import lombok.Data;
 
 @Data
-public class CreateOrderDto {
+public class UserPersonalDetailsDto {
     private String firstName;
     private String lastName;
     private String email;

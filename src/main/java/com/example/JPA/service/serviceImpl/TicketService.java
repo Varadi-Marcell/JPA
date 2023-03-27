@@ -1,28 +1,23 @@
 package com.example.JPA.service.serviceImpl;
 
-import com.example.JPA.dto.TicketDto;
-import com.example.JPA.dto.TicketDtoResponse;
+import com.example.JPA.dto.ticket.FilterTicketDto;
+import com.example.JPA.dto.ticket.TicketDto;
+import com.example.JPA.dto.ticket.TicketDtoResponse;
 import com.example.JPA.exceptions.ResourceNotFoundException;
 import com.example.JPA.model.Cart;
 import com.example.JPA.model.Item;
 import com.example.JPA.model.Ticket;
 
 import com.example.JPA.repository.CartRepository;
-import com.example.JPA.repository.ItemRepository;
 import com.example.JPA.repository.TicketRepository;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -36,25 +31,15 @@ public class TicketService {
         this.cartRepository = cartRepository;
     }
 
-    //test websocket
     public List<Ticket> findAll() {
         return ticketRepository.findAll();
     }
 
-    public TicketDtoResponse getAllTickets(int page, int size) {
+    public TicketDtoResponse getAllTickets(Map<String, Integer> pagination) {
+        int page = Integer.parseInt(String.valueOf(pagination.get("page")));
+        int size = Integer.parseInt(String.valueOf(pagination.get("size")));
+
         PageRequest pageRequest = PageRequest.of(page, size);
-        Page<Ticket> ticketPage = ticketRepository.findAll(pageRequest);
-
-        return new TicketDtoResponse(ticketPage.getContent()
-                .stream()
-                .map(s -> s.ticketToTicketDto(s))
-                .toList(),
-                (int) ticketPage.getTotalElements()
-        );
-    }
-
-    public TicketDtoResponse getAllTickets2(PageRequest pageRequest) {
-
         Page<Ticket> ticketPage = ticketRepository.findAll(pageRequest);
 
         return new TicketDtoResponse(ticketPage.getContent()
@@ -85,7 +70,7 @@ public class TicketService {
 
     @Transactional
     public void deleteTicketById(Long ticketId) {
-        if (!ticketRepository.existsTicketById(ticketId)) {
+        if (ticketRepository.findById(ticketId).isEmpty()) {
             throw new ResourceNotFoundException("Ticket with id:" + ticketId + " not found!");
         }
 
@@ -101,6 +86,24 @@ public class TicketService {
         ticketRepository.deleteById(ticketId);
     }
 
+    public TicketDtoResponse getTicketByPrice(FilterTicketDto filterTicketDto) {
 
+        int page = filterTicketDto.getPage();
+        int size = filterTicketDto.getSize();
+
+        int minPrice = filterTicketDto.getMinPrice();
+        int maxPrice = filterTicketDto.getMaxPrice();
+
+        PageRequest pageRequest = PageRequest.of(page, size);
+        Page<Ticket> ticketPage = ticketRepository.findTicketByPrice(minPrice, maxPrice, pageRequest);
+
+        System.out.println(ticketPage);
+        return new TicketDtoResponse(ticketPage.getContent()
+                .stream()
+                .map(s -> s.ticketToTicketDto(s))
+                .toList(),
+                (int) ticketPage.getTotalElements()
+        );
+    }
 
 }

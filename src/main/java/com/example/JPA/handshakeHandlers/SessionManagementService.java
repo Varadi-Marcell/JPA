@@ -11,7 +11,7 @@ import java.util.Set;
 
 @Service
 public class SessionManagementService {
-    private Set<Principal> sessionHashSet = new HashSet<>();
+    private final Set<Principal> sessionHashSet = new HashSet<>();
 
     private final SimpMessagingTemplate simpMessagingTemplate;
 

@@ -1,5 +1,7 @@
-package com.example.JPA.dto;
+package com.example.JPA.dto.ticket;
+
 import java.time.LocalDate;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,7 +27,4 @@ public class TicketDto {
     private Boolean isAvailable;
     private Boolean isUpcoming;
     private Boolean isLimited;
-
-
-//    private FestivalCardPass festivalCardPass;
 }

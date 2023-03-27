@@ -1,5 +1,6 @@
-package com.example.JPA.dto;
+package com.example.JPA.dto.user;
 
+import com.example.JPA.dto.OrdersDto;
 import com.example.JPA.model.CardPass;
 import com.example.JPA.model.Orders;
 import com.example.JPA.model.User;

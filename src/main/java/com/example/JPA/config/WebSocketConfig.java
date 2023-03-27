@@ -1,4 +1,4 @@
-package com.example.JPA.config.security;
+package com.example.JPA.config;
 
 import com.example.JPA.handshakeHandlers.UserHandshakeHandler;
 import com.example.JPA.handshakeHandlers.UserHandshakeInterceptor;

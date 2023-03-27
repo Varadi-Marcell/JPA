@@ -1,9 +1,10 @@
 package com.example.JPA.service.serviceImpl;
 
 import com.example.JPA.dto.CartDto;
-import com.example.JPA.dto.CreateItemRequest;
-import com.example.JPA.dto.ItemDto;
-import com.example.JPA.dto.UpdateItemDto;
+import com.example.JPA.dto.item.CreateItemRequest;
+import com.example.JPA.dto.item.ItemDto;
+import com.example.JPA.dto.item.UpdateItemDto;
+import com.example.JPA.exceptions.ResourceNotFoundException;
 import com.example.JPA.model.Cart;
 import com.example.JPA.model.Item;
 import com.example.JPA.repository.CartRepository;
@@ -11,6 +12,8 @@ import com.example.JPA.repository.ItemRepository;
 import com.example.JPA.repository.TicketRepository;
 import com.example.JPA.repository.UserRepository;
 import com.example.JPA.service.CartService;
+import com.example.JPA.service.UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -22,24 +25,17 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 @Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
 public class CartServiceImpl implements CartService {
-
     private final CartRepository cartRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final ItemRepository itemRepository;
     private final TicketRepository ticketRepository;
-
-    public CartServiceImpl(CartRepository cartRepository, UserRepository userRepository, ItemRepository itemRepository, TicketRepository ticketRepository) {
-        this.cartRepository = cartRepository;
-        this.userRepository = userRepository;
-        this.itemRepository = itemRepository;
-        this.ticketRepository = ticketRepository;
-    }
-
     @Override
     public Optional<CartDto> getShoppingCartById(Long id) {
-        Cart cart = cartRepository.findById(id).get();
+        Cart cart = cartRepository.findById(id)
+                .orElseThrow(()-> new ResourceNotFoundException("Cart with id:"+id+"not found!"));
 
         List<ItemDto> itemDtos = cart.getItemList().stream()
                 .map(item -> new ItemDto(item, ticketRepository.findById(item.getTicketId()).get()))
@@ -51,10 +47,11 @@ public class CartServiceImpl implements CartService {
     @Override
     @Transactional
     public Optional<CartDto> updateItemQuantity(UpdateItemDto itemDto) {
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        Cart cart = userRepository.findByEmail(userEmail).get().getCardPass().getCart();
+        Cart cart = userService.getUser().getCardPass().getCart();
 
-        Item item = itemRepository.findById(itemDto.getItemId()).get();
+        Item item = itemRepository.findById(itemDto.getItemId())
+                .orElseThrow(()->new ResourceNotFoundException("Item with id:"+itemDto.getItemId()+"not found!"));
+
         item.setQuantity(itemDto.getQuantity());
         cart.calculateAmount();
 
@@ -69,27 +66,28 @@ public class CartServiceImpl implements CartService {
 
     }
 
+    @Transactional
     @Override
     public void addItemToCart(CreateItemRequest req) {
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        Cart cart = userRepository.findByEmail(userEmail).get().getCardPass().getCart();
+        Cart cart = userService.getUser().getCardPass().getCart();
 
         Item item = req.toEntity(req);
+
         cart.addCartItem(item);
         cartRepository.save(cart);
     }
 
+    @Transactional
     @Override
     public Optional<CartDto> removeItemFromCartByItemId(Long itemId) {
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        Cart cart = userRepository.findByEmail(userEmail).get().getCardPass().getCart();
+        Cart cart = userService.getUser().getCardPass().getCart();
+
         Item item = itemRepository.findById(itemId).orElseThrow();
 
 
-        cart.setAmount(cart.getAmount()-(item.getAmount()*item.getQuantity()));
+        cart.setAmount(cart.getAmount() - (item.getAmount() * item.getQuantity()));
         cart.removeItemFromCart(item);
         cartRepository.save(cart);
-
         List<ItemDto> itemDtos = cart.getItemList().stream()
                 .map(item1 -> new ItemDto(item1, ticketRepository.findById(item1.getTicketId()).get()))
                 .toList();
@@ -101,8 +99,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void clearCart() {
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        Cart cart = userRepository.findByEmail(userEmail).get().getCardPass().getCart();
+        Cart cart = userService.getUser().getCardPass().getCart();
 
         cart.clearCart();
 
@@ -111,8 +108,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Optional<CartDto> viewCart() {
-        String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
-        Cart cart = userRepository.findByEmail(userEmail).get().getCardPass().getCart();
+        Cart cart = userService.getUser().getCardPass().getCart();
 
         List<ItemDto> itemDtos = cart.getItemList().stream()
                 .map(item -> new ItemDto(item, ticketRepository.findById(item.getTicketId()).get()))

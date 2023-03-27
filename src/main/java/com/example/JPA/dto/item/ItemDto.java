@@ -1,4 +1,4 @@
-package com.example.JPA.dto;
+package com.example.JPA.dto.item;
 
 import com.example.JPA.model.Item;
 import com.example.JPA.model.Ticket;

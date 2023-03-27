@@ -38,8 +38,10 @@ public class JpaApplication {
 			String rawPassword = encoder.encode("asdasd");
 
 			User user = new User("marci","asd@mail.com",rawPassword,22, Role.ADMIN);
+			User user2 = new User("marcibazsi","marcibazsi11@gmail.com",rawPassword,22, Role.USER);
 
 			userRepository.save(user);
+			userRepository.save(user2);
 
 			List<Ticket> ticketList = IntStream
 					.rangeClosed(1, 50)

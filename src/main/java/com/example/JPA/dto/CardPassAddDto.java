@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FestivalCardPassAddDto implements Serializable {
+public class CardPassAddDto implements Serializable {
 
     private Long id;
     private String name;

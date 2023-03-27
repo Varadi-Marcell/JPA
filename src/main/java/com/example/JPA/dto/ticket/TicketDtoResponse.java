@@ -1,4 +1,4 @@
-package com.example.JPA.dto;
+package com.example.JPA.dto.ticket;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,11 +1,12 @@
 package com.example.JPA.service.serviceImpl;
 
-import com.example.JPA.dto.UserDto;
+import com.example.JPA.dto.user.UserDto;
 import com.example.JPA.exceptions.EmailAlreadyExistsException;
 import com.example.JPA.exceptions.ResourceNotFoundException;
 import com.example.JPA.model.User;
 import com.example.JPA.repository.UserRepository;
 import com.example.JPA.service.UserService;
+import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -29,15 +31,10 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
-    public List<User> getUsers(){
-        return userRepository.findAll();
-    }
-
     @Override
     public UserDto getUserProfile() {
         String userEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         return Optional.of(userRepository.findByEmail(userEmail)
-//                .map(user -> user.convertToDto(user,user.getCardPass()))
                 .map(user -> new UserDto().toUserDto(user,user.getCardPass(),user.getCardPass().getOrders()))
                 .get())
                 .orElseThrow(() -> new RuntimeException("Server error"));

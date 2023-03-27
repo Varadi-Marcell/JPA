@@ -1,8 +1,8 @@
-package com.example.JPA.controller.restApi;
+package com.example.JPA.controller.restApiControllers;
 
-import com.example.JPA.dto.FestivalCardpassDto;
+import com.example.JPA.dto.CardpassDto;
 import com.example.JPA.service.CardPassService;
-import com.example.JPA.dto.FestivalCardPassAddDto;
+import com.example.JPA.dto.CardPassAddDto;
 import com.example.JPA.model.CardPass;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +21,12 @@ public class CardPassController {
     }
 
     @GetMapping
-    public ResponseEntity<List<FestivalCardpassDto>> getAllFestivalCardPass(){
+    public ResponseEntity<List<CardpassDto>> getAllFestivalCardPass(){
         return new ResponseEntity<>(cardPassService.getAllFestivalCardPass(), HttpStatus.OK);
     }
 
     @PostMapping
-    public void createFestivalCardPass(@RequestBody FestivalCardPassAddDto request){
+    public void createFestivalCardPass(@RequestBody CardPassAddDto request){
         cardPassService.createFestivalCardPass(request);
     }
 

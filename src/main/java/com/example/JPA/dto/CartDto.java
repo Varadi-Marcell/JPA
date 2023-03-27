@@ -1,6 +1,6 @@
 package com.example.JPA.dto;
 
-import com.example.JPA.model.Item;
+import com.example.JPA.dto.item.ItemDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

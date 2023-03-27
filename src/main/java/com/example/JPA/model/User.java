@@ -1,6 +1,6 @@
 package com.example.JPA.model;
 
-import com.example.JPA.dto.UserDto;
+import com.example.JPA.dto.user.UserDto;
 
 import jakarta.persistence.*;
 //import jakarta.validation.constraints.Email;
@@ -9,10 +9,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.security.Principal;
 import java.util.Collection;
 import java.util.List;
-
 
 
 @Entity(name = "User")
@@ -23,15 +21,15 @@ import java.util.List;
 @NoArgsConstructor
 @Table(
         name = "users",
-        uniqueConstraints= {
-        @UniqueConstraint(
-                name = "user_name_unique",
-                columnNames = "email")
-}
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "user_name_unique",
+                        columnNames = "email")
+        }
 )
 public class User implements UserDetails {
 
-//    @SequenceGenerator(
+    //    @SequenceGenerator(
 //            name = "user_sequence",
 //            sequenceName = "user_sequence",
 //            allocationSize = 1
@@ -63,7 +61,6 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private Role role;
-    //    @JsonIgnore
     @OneToOne(
             mappedBy = "user",
             orphanRemoval = true,
@@ -73,14 +70,14 @@ public class User implements UserDetails {
 
     @PrePersist
     private void createCardPass() {
-        this.cardPass = new CardPass(1000,this);
+        this.cardPass = new CardPass(1000, this);
         this.cardPass.setUser(this);
     }
 
-    public User(String name, String email, String password,int age,Role role) {
+    public User(String name, String email, String password, int age, Role role) {
         this.name = name;
         this.email = email;
-        this.password= password;
+        this.password = password;
         this.age = age;
         this.role = role;
     }

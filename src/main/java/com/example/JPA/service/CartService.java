@@ -1,11 +1,8 @@
 package com.example.JPA.service;
 
 import com.example.JPA.dto.CartDto;
-import com.example.JPA.dto.CreateItemRequest;
-import com.example.JPA.dto.ItemDto;
-import com.example.JPA.dto.UpdateItemDto;
-import com.example.JPA.model.Cart;
-import com.example.JPA.model.Item;
+import com.example.JPA.dto.item.CreateItemRequest;
+import com.example.JPA.dto.item.UpdateItemDto;
 
 import java.util.Optional;
 

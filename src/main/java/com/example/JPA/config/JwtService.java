@@ -1,4 +1,4 @@
-package com.example.JPA.config.security;
+package com.example.JPA.config;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

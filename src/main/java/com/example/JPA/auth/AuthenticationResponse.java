@@ -1,7 +1,7 @@
 package com.example.JPA.auth;
 
 
-import com.example.JPA.dto.UserDto;
+import com.example.JPA.dto.user.UserDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

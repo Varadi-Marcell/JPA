@@ -1,9 +1,9 @@
 package com.example.JPA.service;
 
-import com.example.JPA.dto.FestivalCardpassDto;
+import com.example.JPA.dto.CardpassDto;
 import com.example.JPA.model.CardPass;
 import com.example.JPA.repository.CardPassRepository;
-import com.example.JPA.dto.FestivalCardPassAddDto;
+import com.example.JPA.dto.CardPassAddDto;
 import com.example.JPA.exceptions.ResourceNotFoundException;
 import com.example.JPA.model.User;
 import com.example.JPA.repository.TicketRepository;
@@ -38,7 +38,7 @@ public class CardPassService {
         this.em = em;
     }
 
-    public List<FestivalCardpassDto> getAllFestivalCardPass() {
+    public List<CardpassDto> getAllFestivalCardPass() {
         return cardPassRepository.findAll()
                 .stream()
                 .map(s -> s.convertToDTO(s))
@@ -50,7 +50,7 @@ public class CardPassService {
     }
 
     @Transactional
-    public void createFestivalCardPass(FestivalCardPassAddDto request) {
+    public void createFestivalCardPass(CardPassAddDto request) {
         if (!userRepository.existsUsersById(request.getId())) {
             throw new ResourceNotFoundException("No such user with this id:" + request.getId());
         }

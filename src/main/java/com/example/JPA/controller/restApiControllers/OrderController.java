@@ -1,13 +1,11 @@
-package com.example.JPA.controller.restApi;
+package com.example.JPA.controller.restApiControllers;
 
-import com.example.JPA.dto.CreateOrderDto;
+import com.example.JPA.dto.user.UserPersonalDetailsDto;
 import com.example.JPA.dto.OrdersDto;
 import com.example.JPA.model.Orders;
 import com.example.JPA.service.OrderService;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +19,7 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping()
-    public ResponseEntity<Void> createOrder(@RequestBody CreateOrderDto dto){
+    public ResponseEntity<Void> createOrder(@RequestBody UserPersonalDetailsDto dto){
         System.out.println(dto);
         orderService.createOrder(dto);
         return new ResponseEntity<>(HttpStatus.CREATED);
