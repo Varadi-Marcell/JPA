@@ -1,19 +1,15 @@
 package com.example.JPA.service;
 
-import com.example.JPA.dto.CardpassDto;
-import com.example.JPA.model.CardPass;
-import com.example.JPA.repository.CardPassRepository;
 import com.example.JPA.dto.CardPassAddDto;
+import com.example.JPA.dto.CardpassDto;
 import com.example.JPA.exceptions.ResourceNotFoundException;
+import com.example.JPA.model.CardPass;
 import com.example.JPA.model.User;
+import com.example.JPA.repository.CardPassRepository;
 import com.example.JPA.repository.TicketRepository;
 import com.example.JPA.repository.UserRepository;
-import jakarta.persistence.EntityManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 
 import java.util.List;
 import java.util.Optional;
@@ -22,20 +18,14 @@ import java.util.stream.Collectors;
 @Service
 public class CardPassService {
 
-    private final EntityManager em;
     private final CardPassRepository cardPassRepository;
     private final UserRepository userRepository;
-    private final TicketRepository ticketRepository;
-    private final Logger logger = LoggerFactory.getLogger(CardPassService.class);
 
     public CardPassService(CardPassRepository cardPassRepository,
-                           UserRepository userRepository,
-                           TicketRepository ticketRepository,
-                           EntityManager em) {
+                           UserRepository userRepository
+                           ) {
         this.cardPassRepository = cardPassRepository;
         this.userRepository = userRepository;
-        this.ticketRepository = ticketRepository;
-        this.em = em;
     }
 
     public List<CardpassDto> getAllFestivalCardPass() {

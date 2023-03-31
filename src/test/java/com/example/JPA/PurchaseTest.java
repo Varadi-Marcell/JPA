@@ -6,12 +6,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 public class PurchaseTest {
 
-//    @MockBean
-//    TicketRepository ticketRepository;
-//
-//    @MockBean
-//    UserRepository userRepository;
-//
     @Test
     void testPurchase(){
 

@@ -100,42 +100,6 @@ public class OrdersTest {
 
         System.out.println(cartRepository.findAll());
 
-//        Item item = new Item(ticket.getId(), 2,12.0);
-//        cart.addCartItem(item);
-//        cartRepository.save(cart);
-//        Item item1 = itemRepository.findById(1L).get();
-//
-//
-//        cart.removeItemFromCart(item1);
-//        itemRepository.delete(item1);
-//        cartRepository.save(cart);
-//
-//        System.out.println(cartRepository.findAll());
-
-//
-////
-//        Item item2 = new Item(ticket.getId(),2,12.0);
-////        ticket.setItem(item2);
-////        ticket.addItem(item2);
-//
-//        //keell
-//        cart.addCartItem(item2);
-//        cart2.addCartItem(item2);
-//        itemRepository.save(item2);
-//
-//
-//
-//        Item item3 = new Item(ticket2.getId(),cart2,2,12.0);
-////        Item item3 = new Item(ticket2,2,12.0);
-//        itemRepository.save(item3);
-////        ticket.setItem(item3);
-//
-//        cart.addCartItem(item3);
-//
-//        cart.removeItemFromCart(item2);
-//        cartRepository.save(cart);
-//        itemRepository.deleteById(item2.getId());
-
 
     }
 

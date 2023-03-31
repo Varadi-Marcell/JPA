@@ -1,8 +1,10 @@
 package com.example.JPA.service;
 
+import com.example.JPA.dto.user.UpdateUserDto;
 import com.example.JPA.dto.user.UserDto;
 import com.example.JPA.model.User;
 
+import java.security.Principal;
 import java.util.List;
 
 public interface UserService {
@@ -18,6 +20,7 @@ public interface UserService {
     public void deleteUserById(Long id);
 
     public User getUser();
+    public UserDto updateUser(UpdateUserDto userDto);
 
 
 }

@@ -1,14 +1,17 @@
 package com.example.JPA.controller.restApiControllers;
 
+import com.example.JPA.dto.user.UpdateUserDto;
 import com.example.JPA.dto.user.UserDto;
 import com.example.JPA.model.User;
 import com.example.JPA.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -50,5 +53,9 @@ public class UserController {
     public ResponseEntity<UserDto> getUserProfile(){
         System.out.println(userService.getUserProfile());
         return new ResponseEntity<>(userService.getUserProfile(),HttpStatus.OK);
+    }
+    @PutMapping()
+    public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UpdateUserDto dto){
+        return new ResponseEntity<>(userService.updateUser(dto),HttpStatus.CREATED);
     }
 }

@@ -37,22 +37,23 @@ public class CartController {
     }
 
     @DeleteMapping("{itemId}")
-    public ResponseEntity<?> removeItemFromCart(@PathVariable("itemId") Long itemId,Principal principal) {
+    public ResponseEntity<?> removeItemFromCart(@PathVariable("itemId") Long itemId, Principal principal) {
 
         CartDto cart = cartService.removeItemFromCartByItemId(itemId).get();
-        messagingTemplate.convertAndSendToUser(principal.getName(),"/queue/update-cart", cart);
+        messagingTemplate.convertAndSendToUser(principal.getName(), "/queue/update-cart", cart);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 
-
     @PutMapping
-    public ResponseEntity<?> updateItem(@RequestBody UpdateItemDto itemDto,Principal principal){
+    public ResponseEntity<?> updateItem(
+            @RequestBody UpdateItemDto itemDto,
+            Principal principal
+    ) {
         CartDto cart = cartService.updateItemQuantity(itemDto).get();
 
-        System.out.println(principal.getName());
-        messagingTemplate.convertAndSendToUser(principal.getName(),"/queue/update-cart", cart);
+        messagingTemplate.convertAndSendToUser(principal.getName(), "/queue/update-cart", cart);
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }

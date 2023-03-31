@@ -28,16 +28,6 @@ import java.util.List;
         }
 )
 public class User implements UserDetails {
-
-    //    @SequenceGenerator(
-//            name = "user_sequence",
-//            sequenceName = "user_sequence",
-//            allocationSize = 1
-//    )
-//    @GeneratedValue(
-//            strategy = SEQUENCE,
-//            generator = "user_sequence"
-//    )
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

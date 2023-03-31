@@ -7,6 +7,7 @@ import com.example.JPA.dto.item.UpdateItemDto;
 import com.example.JPA.exceptions.ResourceNotFoundException;
 import com.example.JPA.model.Cart;
 import com.example.JPA.model.Item;
+import com.example.JPA.model.Ticket;
 import com.example.JPA.repository.CartRepository;
 import com.example.JPA.repository.ItemRepository;
 import com.example.JPA.repository.TicketRepository;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -113,6 +115,7 @@ public class CartServiceImpl implements CartService {
         List<ItemDto> itemDtos = cart.getItemList().stream()
                 .map(item -> new ItemDto(item, ticketRepository.findById(item.getTicketId()).get()))
                 .toList();
+
 
         return Optional.of(new CartDto(cart.getId(), cart.getAmount(), itemDtos));
 
