@@ -12,7 +12,5 @@ public class CardpassDto {
     private Long id;
     private String cardHolderName;
     private Integer amount;
-//    private List<Order> orderSet;
-//    private List<Ticket> ticketList = new ArrayList<>();
 
 }

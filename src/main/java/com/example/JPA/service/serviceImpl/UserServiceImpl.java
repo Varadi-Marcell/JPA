@@ -1,6 +1,5 @@
 package com.example.JPA.service.serviceImpl;
 
-import com.example.JPA.config.JwtService;
 import com.example.JPA.dto.user.UpdateUserDto;
 import com.example.JPA.dto.user.UserDto;
 import com.example.JPA.exceptions.EmailAlreadyExistsException;
@@ -14,24 +13,19 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-
 public class UserServiceImpl implements UserService {
 
-    private final JwtService jwtService;
     private final UserRepository userRepository;
     private final UserDetailsService userDetailsService;
     private final SimpMessagingTemplate messagingTemplate;
 
 
-    public UserServiceImpl(JwtService jwtService, UserRepository userRepository, UserDetailsService userDetailsService, SimpMessagingTemplate messagingTemplate) {
-        this.jwtService = jwtService;
+    public UserServiceImpl(UserRepository userRepository, UserDetailsService userDetailsService, SimpMessagingTemplate messagingTemplate) {
         this.userRepository = userRepository;
         this.userDetailsService = userDetailsService;
         this.messagingTemplate = messagingTemplate;
@@ -61,25 +55,25 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto updateUser(UpdateUserDto userDto) {
-        User user1 = userRepository.findById(userDto.getId()).get();
-        UserDetails userDetails = this.userDetailsService.loadUserByUsername(user1.getEmail());
+        Optional<User> user = userRepository.findById(userDto.getId());
+        if (user.isEmpty()){
+            throw new ResourceNotFoundException("User not found");
+        }
 
-        System.out.println(userDetails.getUsername());
+        UserDetails userDetails = this.userDetailsService.loadUserByUsername(user.get().getEmail());
         messagingTemplate.convertAndSendToUser(
                 userDetails.getUsername(),
                 "/topic/private/userdata",
-                "Your profile has been updated by the admin! \n Please log in again! ");
+                "Your profile has been updated by the admin!");
 
-        return userRepository.findById(userDto.getId())
-                .map(user -> {
-                    user.setName(userDto.getName());
-                    user.setEmail(userDto.getEmail());
-                    user.setAge(userDto.getAge());
-                    user.setRole(userDto.getRole());
-                    return userRepository.save(user);
-                })
-                .map(user -> user.convertToDto(user))
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        user = Optional.ofNullable(User.builder()
+                        .name(userDto.getName())
+                        .email(userDto.getEmail())
+                        .age(userDto.getAge())
+                        .role(userDto.getRole())
+                .build());
+        userRepository.save(user.get());
+        return user.get().convertToDto(user.get());
     }
 
 
