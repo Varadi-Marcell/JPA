@@ -6,6 +6,6 @@ Latest version of Maven
 git clone https://github.com/Varadi-Marcell/ticket-backend.git  
 cd ticket-backend  
 mvn clean  
-mvn install
+mvn install  
 mvn package  
 mvn spring-boot:run
