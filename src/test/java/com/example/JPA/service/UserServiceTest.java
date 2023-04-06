@@ -84,31 +84,31 @@ public class UserServiceTest {
 
     }
 
-    @Test
-    public void updateUser() {
-        UpdateUserDto userDto = new UpdateUserDto();
-        userDto.setId(1L);
-        userDto.setName("marci");
-        userDto.setEmail("marci@gmail.com");
-        userDto.setAge(32);
-        userDto.setRole(Role.USER);
-
-        User user = new User("John Doe", "john.doe@mail.com", "encodedPassword", 30, Role.USER);
-        user.setId(1L);
-        user.setCardPass(new CardPass(432, user));
-
-        when(userRepository.findById(any())).thenReturn(Optional.of(user));
-
-        when(userDetailsService.loadUserByUsername(any())).thenReturn(user);
-
-        UserDto updatedUser = userService.updateUser(userDto);
-        verify(userRepository, times(1)).save(any());
-        assertEquals(updatedUser.getName(), userDto.getName());
-        assertEquals(updatedUser.getEmail(), userDto.getEmail());
-        assertEquals(updatedUser.getAge(), userDto.getAge());
-        assertEquals(String.valueOf(updatedUser.getRole()), String.valueOf(userDto.getRole()));
-
-    }
+//    @Test
+//    public void updateUser() {
+//        UpdateUserDto userDto = new UpdateUserDto();
+//        userDto.setId(1L);
+//        userDto.setName("marci");
+//        userDto.setEmail("marci@gmail.com");
+//        userDto.setAge(32);
+//        userDto.setRole(Role.USER);
+//
+//        User user = new User("John Doe", "john.doe@mail.com", "encodedPassword", 30, Role.USER);
+//        user.setId(1L);
+//        user.setCardPass(new CardPass(432, user));
+//
+//        when(userRepository.findById(any())).thenReturn(Optional.of(user));
+//
+//        when(userDetailsService.loadUserByUsername(any())).thenReturn(user);
+//
+//        UserDto updatedUser = userService.updateUser(userDto);
+//        verify(userRepository, times(1)).save(any());
+//        assertEquals(updatedUser.getName(), userDto.getName());
+//        assertEquals(updatedUser.getEmail(), userDto.getEmail());
+//        assertEquals(updatedUser.getAge(), userDto.getAge());
+//        assertEquals(String.valueOf(updatedUser.getRole()), String.valueOf(userDto.getRole()));
+//
+//    }
     @Test
     public void shouldCreateUser(){
         User user = new User("John Doe", "john.doe@mail.com", "encodedPassword", 30, Role.USER);

@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -54,28 +55,42 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean userGuard(Long id) {
+        if (!(Objects.equals(getUser().getId(), getUserById(id).getId()))) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
     public UserDto updateUser(UpdateUserDto userDto) {
         Optional<User> user = userRepository.findById(userDto.getId());
-        if (user.isEmpty()){
+        if (user.isEmpty()) {
             throw new ResourceNotFoundException("User not found");
         }
 
-        UserDetails userDetails = this.userDetailsService.loadUserByUsername(user.get().getEmail());
-        messagingTemplate.convertAndSendToUser(
-                userDetails.getUsername(),
-                "/topic/private/userdata",
-                "Your profile has been updated by the admin!");
+        if (!checkMail(user.get().getEmail(), userDto.getEmail())){
+            notifyUser(user.get());
+        }
 
-        user = Optional.ofNullable(User.builder()
-                        .name(userDto.getName())
-                        .email(userDto.getEmail())
-                        .age(userDto.getAge())
-                        .role(userDto.getRole())
-                .build());
-        userRepository.save(user.get());
+        userRepository.updateUser(userDto.getName(), userDto.getAge(), userDto.getEmail(), userDto.getRole(), userDto.getId());
+
         return user.get().convertToDto(user.get());
     }
 
+    private boolean checkMail(String oldEmail, String newEmail) {
+        return oldEmail.equals(newEmail);
+    }
+
+
+    private void notifyUser(User user) {
+        UserDetails userDetails = this.userDetailsService.loadUserByUsername(user.getEmail());
+        
+        messagingTemplate.convertAndSendToUser(
+                userDetails.getUsername(),
+                "/topic/private/userdata",
+                "Your profile has been updated please relog!");
+    }
 
     public void createUser(User user) {
         if (userRepository.existsUsersByEmail(user.getEmail())) {

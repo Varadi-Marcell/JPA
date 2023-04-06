@@ -58,4 +58,8 @@ public class UserController {
     public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UpdateUserDto dto){
         return new ResponseEntity<>(userService.updateUser(dto),HttpStatus.CREATED);
     }
+    @PostMapping("/guard")
+    public ResponseEntity<Boolean> userGuard(@RequestBody Long id){
+        return new ResponseEntity<>(userService.userGuard(id),HttpStatus.OK);
+    }
 }
