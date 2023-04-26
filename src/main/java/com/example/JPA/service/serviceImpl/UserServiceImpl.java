@@ -7,11 +7,13 @@ import com.example.JPA.exceptions.ResourceNotFoundException;
 import com.example.JPA.model.User;
 import com.example.JPA.repository.UserRepository;
 import com.example.JPA.service.UserService;
+import jakarta.persistence.EntityManager;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -24,12 +26,14 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserDetailsService userDetailsService;
     private final SimpMessagingTemplate messagingTemplate;
+    private final EntityManager entityManager;
 
 
-    public UserServiceImpl(UserRepository userRepository, UserDetailsService userDetailsService, SimpMessagingTemplate messagingTemplate) {
+    public UserServiceImpl(UserRepository userRepository, UserDetailsService userDetailsService, SimpMessagingTemplate messagingTemplate, EntityManager entityManager) {
         this.userRepository = userRepository;
         this.userDetailsService = userDetailsService;
         this.messagingTemplate = messagingTemplate;
+        this.entityManager = entityManager;
     }
 
 
@@ -63,29 +67,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDto updateUser(UpdateUserDto userDto) {
-        Optional<User> user = userRepository.findById(userDto.getId());
-        if (user.isEmpty()) {
-            throw new ResourceNotFoundException("User not found");
+        Long id = userDto.getId().orElseGet(() -> getUser().getId());
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        if (!checkMail(user.getEmail(), userDto.getEmail())) {
+            notifyUser(user);
         }
 
-        if (!checkMail(user.get().getEmail(), userDto.getEmail())){
-            notifyUser(user.get());
-        }
+        userRepository.updateUser(userDto.getName(), userDto.getAge(), userDto.getEmail(), userDto.getRole(), id);
+        entityManager.flush();
+        entityManager.refresh(user);
 
-        userRepository.updateUser(userDto.getName(), userDto.getAge(), userDto.getEmail(), userDto.getRole(), userDto.getId());
-
-        return user.get().convertToDto(user.get());
+        return user.convertToDto(user);
     }
 
-    private boolean checkMail(String oldEmail, String newEmail) {
+    public boolean checkMail(String oldEmail, String newEmail) {
         return oldEmail.equals(newEmail);
     }
 
-
-    private void notifyUser(User user) {
+    public void notifyUser(User user) {
         UserDetails userDetails = this.userDetailsService.loadUserByUsername(user.getEmail());
-        
         messagingTemplate.convertAndSendToUser(
                 userDetails.getUsername(),
                 "/topic/private/userdata",

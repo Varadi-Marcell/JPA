@@ -8,15 +8,14 @@ import com.example.JPA.model.Role;
 import com.example.JPA.model.User;
 import com.example.JPA.repository.UserRepository;
 import com.example.JPA.service.serviceImpl.UserServiceImpl;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.verification.VerificationMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
@@ -25,13 +24,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
-import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class UserServiceTest {
@@ -43,11 +41,15 @@ public class UserServiceTest {
     @Mock
     UserDetailsService userDetailsService;
     @Mock
+    EntityManager entityManager;
+    @Mock
     SimpMessagingTemplate messagingTemplate;
     List<User> userList;
     @Mock
     private SecurityContext securityContext;
 
+    @Mock
+    private UserDetails userDetails;
     @Mock
     private Authentication authentication;
 
@@ -84,49 +86,45 @@ public class UserServiceTest {
 
     }
 
-//    @Test
-//    public void updateUser() {
-//        UpdateUserDto userDto = new UpdateUserDto();
-//        userDto.setId(1L);
-//        userDto.setName("marci");
-//        userDto.setEmail("marci@gmail.com");
-//        userDto.setAge(32);
-//        userDto.setRole(Role.USER);
-//
-//        User user = new User("John Doe", "john.doe@mail.com", "encodedPassword", 30, Role.USER);
-//        user.setId(1L);
-//        user.setCardPass(new CardPass(432, user));
-//
-//        when(userRepository.findById(any())).thenReturn(Optional.of(user));
-//
-//        when(userDetailsService.loadUserByUsername(any())).thenReturn(user);
-//
-//        UserDto updatedUser = userService.updateUser(userDto);
-//        verify(userRepository, times(1)).save(any());
-//        assertEquals(updatedUser.getName(), userDto.getName());
-//        assertEquals(updatedUser.getEmail(), userDto.getEmail());
-//        assertEquals(updatedUser.getAge(), userDto.getAge());
-//        assertEquals(String.valueOf(updatedUser.getRole()), String.valueOf(userDto.getRole()));
-//
-//    }
     @Test
-    public void shouldCreateUser(){
+    public void shouldUpdateUser() {
+        UpdateUserDto dto = new UpdateUserDto();
+        dto.setId(Optional.of(1L));
+        dto.setName("marci");
+        dto.setEmail("mail@mail.com");
+        dto.setRole(Role.USER);
+        dto.setAge(32);
+
+        User user = new User("John Doe", "john.doe@mail.com", "encodedPassword", 30, Role.USER);
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(userDetailsService.loadUserByUsername(any())).thenReturn(user);
+
+        UserDto updatedUserDto = userService.updateUser(dto);
+
+        verify(userRepository,times(1)).updateUser(dto.getName(),dto.getAge(),dto.getEmail(),dto.getRole(),dto.getId().get());
+    }
+
+    @Test
+    public void shouldCreateUser() {
         User user = new User("John Doe", "john.doe@mail.com", "encodedPassword", 30, Role.USER);
 
         when(userRepository.existsUsersByEmail(any())).thenReturn(false);
         userService.createUser(user);
-        verify(userRepository,times(1)).save(user);
+        verify(userRepository, times(1)).save(user);
     }
+
     @Test
-    public void shouldReturnUser(){
+    public void shouldReturnUser() {
         when(userRepository.findById(1l)).thenReturn(Optional.ofNullable(userList.get(0)));
-        User user =userService.getUserById(1l);
-        assertEquals(userList.get(0),user);
+        User user = userService.getUserById(1l);
+        assertEquals(userList.get(0), user);
     }
+
     @Test
-    public void shouldThrowResourceNotFoundException(){
+    public void shouldThrowResourceNotFoundException() {
         Assertions.assertThrows(ResourceNotFoundException.class, () -> {
-            userService.getUserById (1l);
+            userService.getUserById(1l);
         });
     }
 }
