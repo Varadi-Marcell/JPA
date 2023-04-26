@@ -20,18 +20,18 @@ public class UserController {
 
     private UserService userService;
 
-    public UserController(UserService userService){
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
     @GetMapping()
-    public ResponseEntity<List<UserDto>> getAllUser(){
-        return new ResponseEntity<>(userService.getAllUser(),HttpStatus.OK);
+    public ResponseEntity<List<UserDto>> getAllUser() {
+        return new ResponseEntity<>(userService.getAllUser(), HttpStatus.OK);
     }
 
 
     @PostMapping(consumes = "application/json")
-    public ResponseEntity<Void> createUser(@RequestBody User user){
+    public ResponseEntity<Void> createUser(@RequestBody User user) {
         userService.createUser(user);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(user.getId()).toUri();
@@ -40,26 +40,24 @@ public class UserController {
 
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable("id") Long id){
-        return new ResponseEntity<>(userService.getUserById(id),HttpStatus.OK) ;
+    public ResponseEntity<User> getUserById(@PathVariable("id") Long id) {
+        return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
     }
+    
 
     @DeleteMapping(value = "/{id}")
-    public void deleteUserById(@PathVariable("id") Long id){
+    public void deleteUserById(@PathVariable("id") Long id) {
         userService.deleteUserById(id);
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<UserDto> getUserProfile(){
+    public ResponseEntity<UserDto> getUserProfile() {
         System.out.println(userService.getUserProfile());
-        return new ResponseEntity<>(userService.getUserProfile(),HttpStatus.OK);
+        return new ResponseEntity<>(userService.getUserProfile(), HttpStatus.OK);
     }
+
     @PutMapping()
-    public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UpdateUserDto dto){
-        return new ResponseEntity<>(userService.updateUser(dto),HttpStatus.CREATED);
-    }
-    @PostMapping("/guard")
-    public ResponseEntity<Boolean> userGuard(@RequestBody Long id){
-        return new ResponseEntity<>(userService.userGuard(id),HttpStatus.OK);
+    public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UpdateUserDto dto) {
+        return new ResponseEntity<>(userService.updateUser(dto), HttpStatus.CREATED);
     }
 }

@@ -61,6 +61,7 @@ public class Cart {
 
     public void clearCart() {
         this.itemList.clear();
+        this.setAmount(0);
     }
 
     public Stream<Item> getItemStream() {

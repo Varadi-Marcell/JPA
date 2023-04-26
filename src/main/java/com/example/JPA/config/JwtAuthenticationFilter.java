@@ -1,5 +1,6 @@
 package com.example.JPA.config;
 
+import com.example.JPA.exceptions.ResourceNotFoundException;
 import com.example.JPA.model.User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

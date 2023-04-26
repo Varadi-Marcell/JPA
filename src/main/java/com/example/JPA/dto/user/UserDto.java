@@ -3,11 +3,13 @@ package com.example.JPA.dto.user;
 import com.example.JPA.dto.OrdersDto;
 import com.example.JPA.model.CardPass;
 import com.example.JPA.model.Orders;
+import com.example.JPA.model.Role;
 import com.example.JPA.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.h2.engine.UserBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,5 +51,6 @@ public class UserDto {
                 .orders(new OrdersDto().toOrdersDto(ordersList))
                 .build();
     }
+
 
 }

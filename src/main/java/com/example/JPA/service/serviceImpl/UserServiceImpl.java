@@ -58,13 +58,6 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByEmail(userEmail).orElseThrow(() -> new RuntimeException("User not found"));
     }
 
-    @Override
-    public boolean userGuard(Long id) {
-        if (!(Objects.equals(getUser().getId(), getUserById(id).getId()))) {
-            return false;
-        }
-        return true;
-    }
 
     @Override
     @Transactional

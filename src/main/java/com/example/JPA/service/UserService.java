@@ -22,6 +22,4 @@ public interface UserService {
     public User getUser();
     public UserDto updateUser(UpdateUserDto userDto);
 
-    public boolean userGuard(Long id);
-
 }

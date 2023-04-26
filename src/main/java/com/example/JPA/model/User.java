@@ -72,6 +72,13 @@ public class User implements UserDetails {
         this.role = role;
     }
 
+    public User(String name, String email, int age, Role role) {
+        this.name = name;
+        this.email = email;
+        this.age = age;
+        this.role = role;
+    }
+
     public UserDto convertToDto(User user) {
         return new UserDto().toUserDto(user);
     }
