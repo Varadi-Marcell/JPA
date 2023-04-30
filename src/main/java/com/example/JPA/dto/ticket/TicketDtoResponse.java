@@ -9,6 +9,4 @@ import java.util.List;
 public class TicketDtoResponse {
     private List<TicketDto> ticketDtoList;
     private int size;
-
-
 }

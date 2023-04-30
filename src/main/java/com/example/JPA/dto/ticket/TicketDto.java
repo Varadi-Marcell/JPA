@@ -24,7 +24,4 @@ public class TicketDto {
 
     private String genre;
 
-    private Boolean isAvailable;
-    private Boolean isUpcoming;
-    private Boolean isLimited;
 }

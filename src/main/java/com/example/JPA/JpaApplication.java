@@ -44,9 +44,10 @@ public class JpaApplication {
 			userRepository.save(user2);
 
 			List<Ticket> ticketList = IntStream
-					.rangeClosed(1, 50)
+					.rangeClosed(1, 100)
 					.mapToObj(s -> {
-						String[] cities = {"Budapest", "Debrecen", "Miskolc"};
+						String[] cities = {"Budapest", "Debrecen", "Miskolc","Ózd","Baranya","Siófok","Szolnok"};
+//						String[] cities = {"Budapest", "Debrecen"};
 						String[] musicGenres = {"Blues", "Jazz", "Rock", "Pop"};
 
 						int randomCityIndex = new Random().nextInt(cities.length);

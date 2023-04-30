@@ -61,7 +61,14 @@ public class TicketController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @GetMapping("location")
+    public ResponseEntity<List<String>> getAllLocations(){
+        return new ResponseEntity<>(ticketService.getAllLocation(),HttpStatus.OK);
+    }
 
-
+    @GetMapping("genre")
+    public ResponseEntity<List<String>> getAllGenre(){
+        return new ResponseEntity<>(ticketService.getAllGenre(),HttpStatus.OK);
+    }
 
 }

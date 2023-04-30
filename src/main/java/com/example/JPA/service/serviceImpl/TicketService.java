@@ -1,13 +1,14 @@
 package com.example.JPA.service.serviceImpl;
 
 import com.example.JPA.dto.ticket.FilterTicketDto;
-import com.example.JPA.dto.ticket.TicketDto;
 import com.example.JPA.dto.ticket.TicketDtoResponse;
 import com.example.JPA.exceptions.ResourceNotFoundException;
 import com.example.JPA.model.Cart;
 import com.example.JPA.model.Item;
 import com.example.JPA.model.Ticket;
 
+import com.example.JPA.queries.TicketSearchDao;
+import com.example.JPA.queries.TicketSearchDto;
 import com.example.JPA.repository.CartRepository;
 import com.example.JPA.repository.TicketRepository;
 import org.springframework.data.domain.Page;
@@ -19,16 +20,17 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class TicketService {
     private final TicketRepository ticketRepository;
     private final CartRepository cartRepository;
+    private final TicketSearchDao ticketSearchDao;
 
-    public TicketService(TicketRepository ticketRepository, CartRepository cartRepository) {
+    public TicketService(TicketRepository ticketRepository, CartRepository cartRepository, TicketSearchDao ticketSearchDao) {
         this.ticketRepository = ticketRepository;
         this.cartRepository = cartRepository;
+        this.ticketSearchDao = ticketSearchDao;
     }
 
     public List<Ticket> findAll() {
@@ -105,5 +107,15 @@ public class TicketService {
                 (int) ticketPage.getTotalElements()
         );
     }
+    public List<String> getAllLocation(){
+        return ticketRepository.getAllLocation();
+    }
 
+    public List<String> getAllGenre() {
+        return ticketRepository.getAllGenre();
+    }
+
+    public TicketDtoResponse filterTickets(TicketSearchDto dto) {
+        return ticketSearchDao.ticketQuery(dto);
+    }
 }

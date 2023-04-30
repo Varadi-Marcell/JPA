@@ -24,9 +24,6 @@ public class Ticket implements Serializable {
     private LocalDate startDate;
     private LocalDate endDate;
     private String genre;
-    private Boolean isAvailable;
-    private Boolean isUpcoming;
-    private Boolean isLimited;
     public Ticket() {
     }
 
@@ -74,10 +71,7 @@ public class Ticket implements Serializable {
                 ticket.getPrice(),
                 ticket.getStartDate(),
                 ticket.getEndDate(),
-                ticket.getGenre(),
-                ticket.getIsAvailable(),
-                ticket.getIsUpcoming(),
-                ticket.getIsLimited()
+                ticket.getGenre()
 
         );
     }

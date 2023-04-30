@@ -2,6 +2,7 @@ package com.example.JPA.controller;
 
 import com.example.JPA.dto.ticket.FilterTicketDto;
 import com.example.JPA.dto.ticket.TicketDtoResponse;
+import com.example.JPA.queries.TicketSearchDto;
 import com.example.JPA.service.CartService;
 import com.example.JPA.service.serviceImpl.TicketService;
 import lombok.AllArgsConstructor;
@@ -63,6 +64,21 @@ public class CartControllerWebsocket {
         headerAccessor.setLeaveMutable(true);
 
         messagingTemplate.convertAndSendToUser(sessionId,"/topic/private", ticketService.getTicketByPrice(filterTicketDto),
+                headerAccessor.getMessageHeaders());
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    @MessageMapping("filterTicket")
+    public ResponseEntity<Void> filterTickets(
+            @RequestBody TicketSearchDto dto,
+            @Header("simpSessionId") String sessionId
+    ){
+
+        SimpMessageHeaderAccessor headerAccessor = SimpMessageHeaderAccessor.create(SimpMessageType.MESSAGE);
+        headerAccessor.setSessionId(sessionId);
+        headerAccessor.setLeaveMutable(true);
+
+        messagingTemplate.convertAndSendToUser(sessionId,"/topic/private", ticketService.filterTickets(dto),
                 headerAccessor.getMessageHeaders());
 
         return new ResponseEntity<>(HttpStatus.OK);
