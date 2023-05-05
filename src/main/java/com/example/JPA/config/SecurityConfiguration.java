@@ -3,6 +3,7 @@ package com.example.JPA.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -36,7 +37,9 @@ public class SecurityConfiguration {
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/v1/auth/**", "/api/v1/ticket/**", "/stomp-endpoint/**")
+                .requestMatchers("/api/v1/auth/**", "/stomp-endpoint/**")
+                .permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/v1/ticket/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
@@ -46,6 +49,7 @@ public class SecurityConfiguration {
                 .and()
                 .logout()
                 .logoutUrl("/logout")
+                .invalidateHttpSession(false)
                 .logoutSuccessHandler(logoutSuccessHandler())
                 .and()
                 .authenticationProvider(authenticationProvider)
