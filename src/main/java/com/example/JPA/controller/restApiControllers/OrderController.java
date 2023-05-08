@@ -32,7 +32,6 @@ public class OrderController {
 
     @GetMapping(value = "{startDate}/{endDate}")
     public ResponseEntity<List<OrdersDto>> getOrdersByDates(@PathVariable("startDate") String startDate, @PathVariable("endDate") String endDate){
-        System.out.println("asd");
         System.out.println(orderService.getOrdersByDates(startDate,endDate));
         return new ResponseEntity<>(orderService.getOrdersByDates(startDate,endDate),HttpStatus.OK);
     }

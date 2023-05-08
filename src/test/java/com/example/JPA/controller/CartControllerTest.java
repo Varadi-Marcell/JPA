@@ -93,7 +93,6 @@ public class CartControllerTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(response.getBody()).isNotNull();
-
     }
 }
 
