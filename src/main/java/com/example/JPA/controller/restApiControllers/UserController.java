@@ -33,9 +33,7 @@ public class UserController {
     @PostMapping(consumes = "application/json")
     public ResponseEntity<Void> createUser(@RequestBody User user) {
         userService.createUser(user);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-                .buildAndExpand(user.getId()).toUri();
-        return ResponseEntity.created(location).build();
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 
@@ -43,21 +41,19 @@ public class UserController {
     public ResponseEntity<User> getUserById(@PathVariable("id") Long id) {
         return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
     }
-    
-
-    @DeleteMapping(value = "/{id}")
-    public void deleteUserById(@PathVariable("id") Long id) {
-        userService.deleteUserById(id);
-    }
 
     @GetMapping("/profile")
     public ResponseEntity<UserDto> getUserProfile() {
-        System.out.println(userService.getUserProfile());
         return new ResponseEntity<>(userService.getUserProfile(), HttpStatus.OK);
     }
 
     @PutMapping()
     public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UpdateUserDto dto) {
         return new ResponseEntity<>(userService.updateUser(dto), HttpStatus.CREATED);
+    }
+    @DeleteMapping("{userId}")
+    public ResponseEntity<Void> deleteUserById(@PathVariable("userId") Long id){
+        userService.deleteUserById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
