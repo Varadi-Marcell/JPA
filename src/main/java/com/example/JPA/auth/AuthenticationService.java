@@ -1,6 +1,8 @@
 package com.example.JPA.auth;
 
 import com.example.JPA.config.JwtService;
+import com.example.JPA.exceptions.EmailAlreadyExistsException;
+import com.example.JPA.exceptions.ResourceNotFoundException;
 import com.example.JPA.model.Role;
 import com.example.JPA.model.User;
 import com.example.JPA.repository.UserRepository;
@@ -19,6 +21,10 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(RegisterRequest request) {
+        if (repository.existsUsersByEmail(request.getEmail())){
+            System.out.println("asd");
+            throw new EmailAlreadyExistsException("The email is already registered!");
+        }
         var user = User.builder()
                 .name(request.getName())
                 .email(request.getEmail())
@@ -34,6 +40,9 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
+        if (!repository.existsUsersByEmail(request.getEmail())){
+            throw new ResourceNotFoundException("Email does not exists!");
+        }
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),

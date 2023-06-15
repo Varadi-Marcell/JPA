@@ -60,9 +60,11 @@ public class CartServiceImpl implements CartService {
         itemRepository.save(item);
         cartRepository.save(cart);
 
+
         List<ItemDto> itemDtos = cart.getItemList().stream()
                 .map(item1 -> new ItemDto(item1, ticketRepository.findById(item1.getTicketId()).get()))
                 .toList();
+
 
         return Optional.of(new CartDto(cart.getId(), cart.getAmount(), itemDtos));
 

@@ -35,44 +35,45 @@ public class JpaApplication {
 			){
 		return args -> {
 
-			String rawPassword = encoder.encode("asdasd");
-
-			User user = new User("marci","asd@mail.com",rawPassword,22, Role.ADMIN);
-			User user2 = new User("marcibazsi","marcibazsi11@gmail.com",rawPassword,22, Role.USER);
-
-			userRepository.save(user);
-			userRepository.save(user2);
-
-			List<Ticket> ticketList = IntStream
-					.rangeClosed(1, 100)
-					.mapToObj(s -> {
-						String[] cities = {"Budapest", "Debrecen", "Miskolc","Ózd","Baranya","Siófok","Szolnok"};
-//						String[] cities = {"Budapest", "Debrecen"};
-						String[] musicGenres = {"Blues", "Jazz", "Rock", "Pop"};
-
-						int randomCityIndex = new Random().nextInt(cities.length);
-						int randomMusicIndex = new Random().nextInt(musicGenres.length);
-
-						LocalDate start = LocalDate.of(2023, Month.JANUARY, 1);
-						long days = ChronoUnit.DAYS.between(start, LocalDate.now());
-						LocalDate randomDate = start.plusDays(new Random().nextInt((int) days + 1));
-
-						LocalDate end = LocalDate.of(2023, Month.APRIL, 1);
-						days = ChronoUnit.DAYS.between(start, LocalDate.now());
-						LocalDate randomEndDate = start.plusDays(new Random().nextInt((int) days + 1));
-
-						return new Ticket(
-								faker.app().name(),
-								cities[randomCityIndex],
-								randomDate,
-								randomEndDate,
-								faker.number().numberBetween(100, 200),
-								musicGenres[randomMusicIndex]
-						);
-					})
-					.toList();
-
-			ticketRepository.saveAll(ticketList);
+//			String rawPassword = encoder.encode("asdasd");
+//
+//			User user = new User("marci","asd@mail.com",rawPassword,22, Role.ADMIN);
+//			User user2 = new User("marcibazsi","marcibazsi11@gmail.com",rawPassword,22, Role.USER);
+//
+//			userRepository.save(user);
+//			userRepository.save(user2);
+//
+//			ticketRepository.deleteAll();
+//			List<Ticket> ticketList = IntStream
+//					.rangeClosed(1, 100)
+//					.mapToObj(s -> {
+//						String[] cities = {"Budapest", "Debrecen", "Miskolc","Ózd","Baranya","Siófok","Szolnok"};
+////						String[] cities = {"Budapest", "Debrecen"};
+//						String[] musicGenres = {"Blues", "Jazz", "Rock", "Pop"};
+//
+//						int randomCityIndex = new Random().nextInt(cities.length);
+//						int randomMusicIndex = new Random().nextInt(musicGenres.length);
+//
+//						LocalDate start = LocalDate.of(2023, Month.JANUARY, 1);
+//						long days = ChronoUnit.DAYS.between(start, LocalDate.now());
+//						LocalDate randomDate = start.plusDays(new Random().nextInt((int) days + 1));
+//
+//						LocalDate end = LocalDate.of(2023, Month.APRIL, 1);
+//						days = ChronoUnit.DAYS.between(start, LocalDate.now());
+//						LocalDate randomEndDate = start.plusDays(new Random().nextInt((int) days + 1));
+//
+//						return new Ticket(
+//								faker.app().name(),
+//								cities[randomCityIndex],
+//								randomDate,
+//								randomEndDate,
+//								faker.number().numberBetween(100, 200),
+//								musicGenres[randomMusicIndex]
+//						);
+//					})
+//					.toList();
+//
+//			ticketRepository.saveAll(ticketList);
 
 
 

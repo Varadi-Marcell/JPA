@@ -4,6 +4,7 @@ import com.example.JPA.dto.ticket.FilterTicketDto;
 import com.example.JPA.dto.ticket.TicketDto;
 import com.example.JPA.dto.ticket.TicketDtoResponse;
 import com.example.JPA.model.Ticket;
+import com.example.JPA.queries.TicketSearchDto;
 import com.example.JPA.service.serviceImpl.TicketService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +39,7 @@ public class TicketController {
         return ticketService.getAllTickets(pagination);
     }
 
+
     @GetMapping("{id}")
     public Ticket getTicketById(@PathVariable("id") Long id) {
         return ticketService.getTicketById(id);
@@ -60,6 +62,7 @@ public class TicketController {
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
 
     @GetMapping("location")
     public ResponseEntity<List<String>> getAllLocations(){
